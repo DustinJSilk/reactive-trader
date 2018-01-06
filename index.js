@@ -26,23 +26,16 @@ class ReativeTrader {
     }
   }
 
-  start() {
-    this.strategyFinder.findNewStrategy()
-        .then(strategy => this.runStrategy(strategy))
-        .catch(err => console.error('Error running: ', err));
+  async start() {
+    await this.gekkoManager.runServer();
+    const strategy = await this.strategyFinder.findNewStrategy();
+    this.runStrategy(strategy);
   }
 
   async runStrategy(strategy) {
     await this.configBuilder.buildStrategyConfig(strategy);
-
     console.log('Running strategy: ', strategy.slug);
-
-    // TODO: build plugin to switch strategies.
-    if (this.gekkoManager.isRunning()) {
-      console.log('Server already running.');
-    } else {
-      console.log('Start up the server now');
-    }
+    this.gekkoManager.runTrader();
   }
 
   keepRunning() {

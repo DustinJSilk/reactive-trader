@@ -34,7 +34,7 @@ The basic future:
 - ~~Setup and installation~~
 - ~~Add importing~~
 - Create backtesting class for individual strategies
-- Properly run a single strategy
+- ~~Properly run a single strategy~~
 - Create strategy finder class using a genetic algorithm
 - Create Gekko plugin to switch strategies without shutting down the server first
 - Add logging

@@ -109,8 +109,8 @@ class ConfigBuilder {
 
   addStrategy(data, strategy) {
     data.tradingAdvisor = config.gekko.tradingAdvisor;
-    data.tradingAdvisor.method = strategy;
-    data[strategy.slud] = data.strategy;
+    data.tradingAdvisor.method = strategy.slug;
+    data[strategy.slug] = strategy;
     return data;
   }
 

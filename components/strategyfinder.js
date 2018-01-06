@@ -14,16 +14,11 @@ class StrategyFinder {
   async findNewStrategy() {
     console.log('Finding strategy');
 
-    if (!this.gekkoManager.isRunning()) {
-      await this.configBuilder.buildImportConfig();
-      await this.gekkoManager.importData();
-      await this.gekkoManager.runServer();
-    }
+    await this.configBuilder.buildImportConfig();
+    await this.gekkoManager.importData();
 
     const strategy =  await this.testAllStrategies();
     console.log('Found strategy: ', strategy.slug);
-
-    this.gekkoManager.stopServer();
 
     return strategy;
   }

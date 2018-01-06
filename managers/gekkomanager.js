@@ -1,6 +1,8 @@
 const {exec} = require('child_process');
 
-const child = require('child')
+const child = require('child');
+
+const config = require('../config.js');
 
 const GEKKO = __dirname + '/../../gekko';
 
@@ -10,12 +12,14 @@ const NODE = 'node';
 
 const Options = {
   IMPORT: [GEKKO, '--import', '--config=./reactive-trader/tmp-config.js'],
-  RUN: [GEKKO_API, '--config=./reactive-trader/tmp-config.js']
+  SERVER: [GEKKO_API, '--config=./reactive-trader/tmp-config.js'],
+  TRADE: [GEKKO, '--config=./reactive-trader/tmp-config.js']
 };
 
 class GekkoManager {
   constructor() {
     this.server = null;
+    this.trader = null;
   }
 
   static getInstance() {
@@ -27,10 +31,6 @@ class GekkoManager {
   }
 
   async importData() {
-    if (this.server != null) {
-      await this.stopServer();
-    }
-
     console.log('Importing data');
 
     return new Promise((resolve, reject) => {
@@ -55,18 +55,45 @@ class GekkoManager {
     console.log('Running server');
 
     return new Promise((resolve, reject) => {
-      this.server = child({command: NODE, args: Options.RUN,
+      this.server = child({command: NODE, args: Options.SERVER,
         cbStdout: data => console.log('out ' + data),
         cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
-          if (!this.isStoppingGracefully) {
-            console.log('Server quit unexpectedly', exitCode)
-            this.stopServer().then(() => reject(exitCode));
-          }
+          console.log('Server quit unexpectedly', exitCode)
+          this.stopServer().then(() => reject(exitCode));
         },
       });
 
       this.server.start(resolve);
+    });
+  }
+
+  stopServer() {
+    console.log('Stopping server');
+
+    return new Promise((resolve, reject) => {
+      if (this.server != null) {
+        this.server.stop(resolve);
+        this.server = null;
+      } else {
+        console.log('Stop failed: No server found');
+        resolve();
+      }
+    });
+  }
+
+  runTrader() {
+    console.log('Running trader');
+    console.log('paperTrader: ', config.paperTrader);
+    console.log('liveTrader: ', config.liveTrader);
+
+    return new Promise((resolve, reject) => {
+      this.trader = child({command: NODE, args: Options.TRADE,
+        cbStdout: data => console.log('out ' + data),
+        cbStderr: data => console.log('err ' + data)
+      });
+
+      this.trader.start();
     });
   }
 
@@ -83,10 +110,6 @@ class GekkoManager {
         resolve();
       }
     });
-  }
-
-  isRunning() {
-    return !!this.server;
   }
 }
 

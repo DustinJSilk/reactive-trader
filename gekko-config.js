@@ -129,7 +129,7 @@ config['talib-macd'] = {
 }
 
 config.paperTrader = {
-  enabled: false,
+  enabled: true,
   reportInCurrency: true,
   simulationBalance: {
     asset: 1,

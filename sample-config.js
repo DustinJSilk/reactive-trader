@@ -17,7 +17,7 @@ module.exports = {
   // The approximate number of candles between checking for a new best strategy
   updateStrategyTime: 48,
 
-  paperTrader: false,
+  paperTrader: true,
 
   liveTrader: false,
 

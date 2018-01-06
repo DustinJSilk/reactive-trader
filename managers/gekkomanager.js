@@ -3,11 +3,14 @@ const {exec} = require('child_process');
 const child = require('child')
 
 const GEKKO = __dirname + '/../../gekko';
+
+const GEKKO_API = __dirname + '/../../web/server';
+
 const NODE = 'node';
 
 const Options = {
   IMPORT: [GEKKO, '--import', '--config=./reactive-trader/tmp-config.js'],
-  RUN: [GEKKO, '--config=./reactive-trader/tmp-config.js']
+  RUN: [GEKKO_API, '--config=./reactive-trader/tmp-config.js']
 };
 
 class GekkoManager {
@@ -31,20 +34,20 @@ class GekkoManager {
     console.log('Importing data');
 
     return new Promise((resolve, reject) => {
-      this.server = child({command: NODE, args: Options.IMPORT,
+      child({command: NODE, args: Options.IMPORT,
         cbStdout: data => console.log('out ' + data),
         cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
           console.log('Import complete');
-          this.stopServer().then(resolve);
+          resolve();
         },
-      });
-
-      this.server.start();
+      }).start();
     });
   }
 
   async runServer() {
+    this.isStoppingGracefully = false;
+
     if (this.server != null) {
       await this.stopServer();
     }
@@ -56,16 +59,14 @@ class GekkoManager {
         cbStdout: data => console.log('out ' + data),
         cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
-          console.log('Server quit unexpectedly', exitCode)
-          this.stopServer().then(() => reject(exitCode));
+          if (!this.isStoppingGracefully) {
+            console.log('Server quit unexpectedly', exitCode)
+            this.stopServer().then(() => reject(exitCode));
+          }
         },
       });
 
-      this.server.start();
-
-      // How do we know its up and running successfully? I don't know yet so
-      // we'll just wait a bit and then resolve.
-      setTimeout(() => resolve, 2000);
+      this.server.start(resolve);
     });
   }
 
@@ -74,6 +75,7 @@ class GekkoManager {
 
     return new Promise((resolve, reject) => {
       if (this.server != null) {
+        this.isStoppingGracefully = true;
         this.server.stop(resolve);
         this.server = null;
       } else {

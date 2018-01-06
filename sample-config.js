@@ -17,7 +17,7 @@ module.exports = {
   // The approximate number of candles between checking for a new best strategy
   updateStrategyTime: 48,
 
-  paperTrader: true,
+  paperTrader: false,
 
   liveTrader: false,
 
@@ -34,7 +34,6 @@ module.exports = {
 
     tradingAdvisor: {
       enabled: false,
-      method: 'MACD',
       candleSize: 1,
       historySize: 3,
       adapter: 'sqlite'

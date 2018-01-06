@@ -6,6 +6,13 @@ var config = {};
 config.debug = true;
 config.silent = false;
 
+config.tradingAdvisor = {
+  enabled: false,
+  candleSize: 1,
+  historySize: 3,
+  adapter: 'sqlite'
+};
+
 config.DEMA = {
   short: 10,
   long: 21,
@@ -122,7 +129,7 @@ config['talib-macd'] = {
 }
 
 config.paperTrader = {
-  enabled: true,
+  enabled: false,
   reportInCurrency: true,
   simulationBalance: {
     asset: 1,

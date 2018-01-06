@@ -24,10 +24,8 @@ class ConfigBuilder {
   constructor() {}
 
   isValid() {
-    if (config.paperTrader && config.liveTrader||
-        config.paperTrader && gekkoConfig.trader.enabled ||
-        config.paperTrader != gekkoConfig.paperTrader.enabled ||
-        config.liveTrader != gekkoConfig.trader.enabled) {
+    if (config.paperTrader && config.liveTrader) {
+      console.log('Live trade or paper trade. Not both!');
       return false;
     }
 
@@ -110,14 +108,17 @@ class ConfigBuilder {
   }
 
   addStrategy(data, strategy) {
+    data.tradingAdvisor = config.gekko.tradingAdvisor;
     data.tradingAdvisor.method = strategy;
+    data[strategy.slud] = data.strategy;
     return data;
   }
 
   addImportDateRange(data) {
     data.importer = {};
     data.importer.daterange = {
-      from: moment().subtract(config.backtestRange, Period.HOURS).format(DATE_FORMAT),
+      from: moment().subtract(config.backtestRange, Period.HOURS)
+          .format(DATE_FORMAT),
       to: moment().format(DATE_FORMAT)
     };
 
@@ -127,7 +128,8 @@ class ConfigBuilder {
   addBacktestDateRange(data) {
     data.importer = {};
     data.importer.daterange = {
-      from: moment().subtract(config.backtestRange, Period.HOURS).format(DATE_FORMAT),
+      from: moment().subtract(config.backtestRange, Period.HOURS)
+          .format(DATE_FORMAT),
       to: moment().format(DATE_FORMAT)
     };
 

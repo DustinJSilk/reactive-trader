@@ -1,0 +1,31 @@
+{
+  "name": "reative-gekko-strategy",
+  "version": "0.0.1",
+  "description": "A bot managing a bot making money.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DustinJSilk/reactive-trader.git"
+  },
+  "keywords": [
+    "gekko",
+    "cryptocurrencies",
+    "bitcoin",
+    "trading",
+    "trader",
+    "bot"
+  ],
+  "author": "Dustin J Silk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DustinJSilk/reactive-trader/issues"
+  },
+  "homepage": "https://github.com/DustinJSilk/reactive-trader#readme",
+  "dependencies": {
+    "moment": "^2.20.1",
+    "toml": "^2.3.3"
+  }
+}

@@ -1,7 +1,10 @@
 module.exports = {
   /**
-   * The strategies to check
+   * The strategies to check.
    * 'all' / ['MACD', 'RSI', ...]
+   * Using 'all' will take considerable time and processing power. I recommend
+   * using a desktop or selecting a few strategies only unless of course you
+   * have a large and powerful server available.
    */
   strategies: 'all',
 
@@ -18,6 +21,10 @@ module.exports = {
 
   liveTrader: false,
 
+  // This should match the config in gekkos web/vue/UIconfig.js, making sure
+  // that port is available.
+  apiEndpoint: 'http://127.0.0.1:3000',
+
   gekko: {
     watch: {
       exchange: 'poloniex',
@@ -26,7 +33,7 @@ module.exports = {
     },
 
     tradingAdvisor: {
-      enabled: true,
+      enabled: false,
       method: 'MACD',
       candleSize: 1,
       historySize: 3,

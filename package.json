@@ -4,7 +4,7 @@
   "description": "A bot managing a bot making money.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "reactive-trading": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/DustinJSilk/reactive-trader#readme",
   "dependencies": {
+    "child": "0.0.3",
     "moment": "^2.20.1",
     "toml": "^2.3.3"
   }

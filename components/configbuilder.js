@@ -1,7 +1,10 @@
-const gekkoConfig = require('../gekko-config');
-const config = require('../config');
 const fs = require('fs');
+
 const moment = require('moment');
+
+const config = require('../config');
+const gekkoConfig = require('../gekko-config');
+
 
 const TEMP_CONFIG_LOCATION = __dirname + '/../tmp-config.js';
 
@@ -35,11 +38,37 @@ class ConfigBuilder {
   }
 
   /**
+   * Builds the config specifically for running a strtegy
+   */
+  async buildStrategyConfig(strategy) {
+    if (!this.allowConfig)
+      throw new Error(WARNING_CONFIG_ERROR);
+
+    console.log('Building strategy config');
+
+    try {
+      let data = {};
+      await this.removeOldConfig();
+      data = this.duplicateGekkoConfigObject();
+      data = this.addStrategy(data, strategy);
+      data = this.addBacktestDateRange(data);
+      data = this.addCurrencyAsset(data);
+      data = await this.saveFile(data);
+
+    } catch (err) {
+      console.error(ErrorMessage.BUILDING_CONFIG, err)
+    }
+  }
+
+  /**
    * Builds the config specifically for the initial backtest.
+   * TODO: Switch to async
    */
   buildBacktestConfig() {
     if (!this.allowConfig)
       throw new Error(WARNING_CONFIG_ERROR);
+
+    console.log('Building backtesting config');
 
     return this.removeOldConfig()
         .then(() => this.duplicateGekkoConfigObject())
@@ -52,10 +81,13 @@ class ConfigBuilder {
   /**
    * Builds the config specifically for the inital config. (I think theres a
    * minimum of 1 day at least.)
+   * TODO: Switch to async
    */
   buildImportConfig() {
     if (!this.allowConfig)
       throw new Error(WARNING_CONFIG_ERROR);
+
+    console.log('Building import config');
 
     return this.removeOldConfig()
         .then(() => this.duplicateGekkoConfigObject())
@@ -89,10 +121,15 @@ class ConfigBuilder {
     return data;
   }
 
+  addStrategy(data, strategy) {
+    data.tradingAdvisor.method = strategy;
+    return data;
+  }
+
   addImportDateRange(data) {
     data.importer = {};
     data.importer.daterange = {
-      from: moment().subtract(1, Period.DAYS).format(DATE_FORMAT),
+      from: moment().subtract(config.backtestRange, Period.HOURS).format(DATE_FORMAT),
       to: moment().format(DATE_FORMAT)
     };
 

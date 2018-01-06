@@ -15,35 +15,29 @@ const Period = {
 
 const DATE_FORMAT = 'YYYY-MM-DD hh:mm';
 
-const WARNING_CONFIG_ERROR = `To avoid mistakenly using the wrong settings you
-need to make sure that paperTrader isn't enabled with the live trader or vice verse.
-Reactive Traders config should match Gekkos config too.`;
-
 const ErrorMessage = {
   BUILDING_CONFIG: 'Something went wrong building the configuration file:\n',
   PAPER_AND_LIVE_TRADE: 'Paper trading & live trading set.'
 };
 
 class ConfigBuilder {
-  constructor() {
+  constructor() {}
+
+  isValid() {
     if (config.paperTrader && config.liveTrader||
         config.paperTrader && gekkoConfig.trader.enabled ||
         config.paperTrader != gekkoConfig.paperTrader.enabled ||
         config.liveTrader != gekkoConfig.trader.enabled) {
-      this.allowConfig = false;
-
-    } else {
-      this.allowConfig = true;
+      return false;
     }
+
+    return true;
   }
 
   /**
    * Builds the config specifically for running a strtegy
    */
   async buildStrategyConfig(strategy) {
-    if (!this.allowConfig)
-      throw new Error(WARNING_CONFIG_ERROR);
-
     console.log('Building strategy config');
 
     try {
@@ -65,9 +59,6 @@ class ConfigBuilder {
    * TODO: Switch to async
    */
   buildBacktestConfig() {
-    if (!this.allowConfig)
-      throw new Error(WARNING_CONFIG_ERROR);
-
     console.log('Building backtesting config');
 
     return this.removeOldConfig()
@@ -84,9 +75,6 @@ class ConfigBuilder {
    * TODO: Switch to async
    */
   buildImportConfig() {
-    if (!this.allowConfig)
-      throw new Error(WARNING_CONFIG_ERROR);
-
     console.log('Building import config');
 
     return this.removeOldConfig()

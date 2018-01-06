@@ -12,14 +12,22 @@ const ErrorMessage = {
   NO_STRATEGIES_FOUND: 'No strategies found',
 };
 
+const WARNING_CONFIG_ERROR = `To avoid mistakenly using the wrong settings you
+need to make sure that paperTrader isn't enabled with the live trader or vice verse.
+Reactive Traders config should match Gekkos config too.`;
+
 class ReativeTrader {
   constructor() {
     this.gekkoManager = GekkoManager.getInstance();
     this.configBuilder = new ConfigBuilder();
     this.strategyFinder = new StrategyFinder();
 
-    this.start();
-    this.keepRunning();
+    if (this.configBuilder.isValid()) {
+      this.start();
+      this.keepRunning();
+    } else {
+      throw new Error(WARNING_CONFIG_ERROR);
+    }
   }
 
   start() {

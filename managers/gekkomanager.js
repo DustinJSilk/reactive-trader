@@ -38,7 +38,9 @@ class GekkoManager {
           console.log('Import complete');
           this.stopServer().then(resolve);
         },
-      }).start();
+      });
+
+      this.server.start();
     });
   }
 
@@ -51,10 +53,15 @@ class GekkoManager {
 
     return new Promise((resolve, reject) => {
       this.server = child({command: NODE, args: Options.RUN,
+        cbStdout: data => console.log('out ' + data),
+        cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
-          this.stopServer().then(reject);
+          console.log('Server quit unexpectedly', exitCode)
+          this.stopServer().then(() => reject(exitCode));
         },
-      }).start();
+      });
+
+      this.server.start();
 
       // How do we know its up and running successfully? I don't know yet so
       // we'll just wait a bit and then resolve.
@@ -67,11 +74,12 @@ class GekkoManager {
 
     return new Promise((resolve, reject) => {
       if (this.server != null) {
-        this.server.stop();
+        this.server.stop(resolve);
         this.server = null;
+      } else {
+        console.log('Stop failed: No server found');
+        resolve();
       }
-
-      resolve();
     });
   }
 

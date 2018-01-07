@@ -281,7 +281,7 @@ config.sqlite = {
   path: 'plugins/sqlite',
   dataDirectory: 'history',
   version: 0.1,
-  journalMode: require('../web/isWindows.js') ? 'DELETE' : 'WAL',
+  journalMode: require('../../web/isWindows.js') ? 'DELETE' : 'WAL',
   dependencies: []
 }
 

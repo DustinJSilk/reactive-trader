@@ -2,11 +2,11 @@ const fs = require('fs');
 
 const moment = require('moment');
 
-const config = require('../config');
-const gekkoConfig = require('../gekko-config');
+const config = require('../config/config');
+const gekkoConfig = require('../config/gekko-config');
 
 
-const TEMP_CONFIG_LOCATION = __dirname + '/../tmp-config.js';
+const TEMP_CONFIG_LOCATION = __dirname + '/../config/tmp-config.js';
 
 const Period = {
   DAYS: 'days',
@@ -39,11 +39,10 @@ class ConfigBuilder {
     console.log('Building strategy config');
 
     try {
-      let data = {};
       await this.removeOldConfig();
-      data = this.duplicateGekkoConfigObject();
+
+      let data = this.duplicateGekkoConfigObject();
       data = this.addStrategy(data, strategy);
-      data = this.addBacktestDateRange(data);
       data = this.addCurrencyAsset(data);
       data = await this.saveFile(data);
 
@@ -53,18 +52,21 @@ class ConfigBuilder {
   }
 
   /**
-   * Builds the config specifically for the initial backtest.
-   * TODO: Switch to async
+   * Returns the config specifically for use with the api/backtest endpoint.
    */
-  buildBacktestConfig() {
+  async getBacktestConfig(strategy, dateRange) {
     console.log('Building backtesting config');
 
-    return this.removeOldConfig()
-        .then(() => this.duplicateGekkoConfigObject())
-        .then(data => this.addBacktestDateRange(data))
-        .then(data => this.addCurrencyAsset(data))
-        .then(data => this.saveFile(data))
-        .catch(err => console.error(ErrorMessage.BUILDING_CONFIG, err))
+    try {
+      let data = this.duplicateGekkoConfigObject();
+      data = this.addStrategy(data, strategy);
+      data = this.addBacktestDateRange(data, dateRange);
+      data = this.addCurrencyAsset(data);
+      return data;
+
+    } catch (err) {
+      console.error(ErrorMessage.BUILDING_CONFIG, err)
+    }
   }
 
   /**
@@ -110,7 +112,10 @@ class ConfigBuilder {
   addStrategy(data, strategy) {
     data.tradingAdvisor = config.gekko.tradingAdvisor;
     data.tradingAdvisor.method = strategy.slug;
-    data[strategy.slug] = strategy;
+    // TODO: Setup candle size / history size
+    data.tradingAdvisor.candleSize = strategy.input.candleSize;
+    data.tradingAdvisor.historySize = strategy.input.historySize;
+    data[strategy.slug] = strategy.input;
     return data;
   }
 
@@ -125,11 +130,10 @@ class ConfigBuilder {
     return data;
   }
 
-  addBacktestDateRange(data) {
-    data.importer = {};
-    data.importer.daterange = {
-      from: moment().subtract(config.backtestRange, Period.HOURS)
-          .format(DATE_FORMAT),
+  addBacktestDateRange(data, range) {
+    data.backtest = {};
+    data.backtest.daterange = {
+      from: moment().subtract(range, Period.HOURS).format(DATE_FORMAT),
       to: moment().format(DATE_FORMAT)
     };
 

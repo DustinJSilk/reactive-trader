@@ -2,18 +2,17 @@ const {exec} = require('child_process');
 
 const child = require('child');
 
-const config = require('../config.js');
+const config = require('../config/config.js');
 
 const GEKKO = __dirname + '/../../gekko';
-
 const GEKKO_API = __dirname + '/../../web/server';
-
 const NODE = 'node';
+const CONFIG_ARG = '--config=./reactive-trader/config/tmp-config.js';
 
 const Options = {
-  IMPORT: [GEKKO, '--import', '--config=./reactive-trader/tmp-config.js'],
-  SERVER: [GEKKO_API, '--config=./reactive-trader/tmp-config.js'],
-  TRADE: [GEKKO, '--config=./reactive-trader/tmp-config.js']
+  IMPORT: [GEKKO, '--import', CONFIG_ARG],
+  SERVER: [GEKKO_API, CONFIG_ARG],
+  TRADE: [GEKKO, CONFIG_ARG]
 };
 
 class GekkoManager {

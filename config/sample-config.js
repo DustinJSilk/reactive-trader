@@ -1,13 +1,4 @@
 module.exports = {
-  /**
-   * The strategies to check.
-   * 'all' / ['MACD', 'RSI', ...]
-   * Using 'all' will take considerable time and processing power. I recommend
-   * using a desktop or selecting a few strategies only unless of course you
-   * have a large and powerful server available.
-   */
-  strategies: 'all',
-
   // The number of hours to run the initial backtest on before starting
   backtestRange: 2,
 
@@ -25,6 +16,9 @@ module.exports = {
   // that port is available.
   apiEndpoint: 'http://127.0.0.1:3000',
 
+  // verbose, debug, silent
+  logging: 'debug',
+
   gekko: {
     watch: {
       exchange: 'poloniex',
@@ -38,5 +32,15 @@ module.exports = {
       historySize: 3,
       adapter: 'sqlite'
     }
+
+    simulationBalance: {
+      'asset': 1,
+      'currency': 1
+    },
+
+    slippage: 0.05,
+    feeTaker: 0.25,
+    feeMaker: 0.25,
+    feeUsing: 'taker', // maker || taker
   }
 }

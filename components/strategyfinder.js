@@ -1,8 +1,8 @@
 const Backtester = require('./backtester');
 const ConfigBuilder = require('./configbuilder');
-
 const GekkoManager = require('../managers/gekkomanager');
-
+const config = require('../config/config');
+const strategies = require('../config/strategies');
 
 class StrategyFinder {
   constructor() {
@@ -18,31 +18,40 @@ class StrategyFinder {
     await this.gekkoManager.importData();
 
     const strategy =  await this.testAllStrategies();
-    console.log('Found strategy: ', strategy.slug);
+    console.log('Top performing strategy: ', strategy);
 
     return strategy;
   }
 
   async testAllStrategies() {
-    // TODO: It will return the one with the best yearly profit. For now we
-    // return a test.
-    console.log('Testing all strats');
-    return await this.testStrategy();
+    const reducerStart = {test: {profit: -99999}};
+    const enabledStrategies = strategies.filter(strategy => strategy.enabled);
+
+    return await enabledStrategies.reduce(async (prevPromise, strategy) => {
+      const result = await this.testStrategy(strategy);
+      const best = await prevPromise;
+
+      return result.test.profit > best.test.profit ? result : best;
+    }, Promise.resolve(reducerStart));
   }
 
-  async testStrategy() {
-    console.log('Testing single strategy: void');
+  async testStrategy(strategy) {
+    console.log('Testing ' + strategy.slug);
+    const settings = this.getStrategySettings(strategy);
+    const backtestConfig = await this.configBuilder.getBacktestConfig(settings,
+        config.backtestRange);
+    const test = await this.backtester.run(backtestConfig);
+    return Object.assign(settings, {test});;
+  }
 
-    return new Promise(resolve => {
-      resolve({
-        slug: 'stochastic',
-        optInFastK_Period: 5,
-        optInSlowK_Period: 3,
-        optInSlowK_MAType: 0,
-        optInSlowD_Period: 3,
-        optInSlowD_MAType: 0,
-      });
-    });
+  getStrategySettings(strategy) {
+    const data = {
+      slug: strategy.slug,
+      input: strategy.input(),
+    };
+    data.input.candleSize = 30;
+    data.input.historySize = 20;
+    return data;
   }
 }
 

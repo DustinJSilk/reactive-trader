@@ -27,6 +27,18 @@ Setup config.js to your liking.
 
 $ npm run reactive-trading
 
+## Database
+
+I had problems with SQLite. Switch to postgres or mongodb.
+
+## Thresholds problem
+
+Some strategies (~MACD) use threshold values that can vary a lot from coin to coin.
+Some coins might need values between 0.05 and -0.05 while others will need them between 0.00000005 and -0.00000005.
+This makes finding the correct Min and Max values time consuming. (Either manually with https://github.com/DustinJSilk/gekkoga-plus-ui or computationally which would require time and processing power).
+These thresholds are linked to the individual markets currency value.
+The solution would be to use a percentage Min / Max. This is in the road map.
+
 ## Roadmap
 
 The basic future:
@@ -35,12 +47,16 @@ The basic future:
 - ~~Add importing~~
 - ~~Create backtesting class for individual strategies~~
 - ~~Properly run a single strategy~~
-- Create strategy finder class using a genetic algorithm
-- Setup config updating intervals
+- ~~Create strategy finder class using a genetic algorithm~~
+- ~~Add mutation to the genetic algorithm~~
+- Setup strategy updating intervals
+- Figure out the thresholds problem mentioned above
+- Setup backtesting for the whole bot.
 - Add a UI layer to see running stats
 - Add proper logging
 - Begin paper trading
-- Setup backtesting for the whole bot.
 - Begin live trading
+- Run a Genetic algorithm on this app to find the ultimate perfect settings.
+- Profit.
 
-Deadline: End of the week
+Deadline: End of ~~the~~ next week

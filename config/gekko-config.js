@@ -3,8 +3,8 @@
 
 var config = {};
 
-config.debug = true;
-config.silent = false;
+config.debug = false;
+config.silent = true;
 
 config.tradingAdvisor = {
   enabled: false,
@@ -300,7 +300,7 @@ config.postgresql = {
 config.mongodb = {
   path: 'plugins/mongodb',
   version: 0.1,
-  connectionString: 'mongodb://mongodb/gekko',
+  connectionString: 'mongodb://127.0.0.1:27017/gekko',
   dependencies: [{
     module: 'mongojs',
     version: '2.4.0'

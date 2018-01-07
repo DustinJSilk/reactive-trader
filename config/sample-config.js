@@ -12,6 +12,10 @@ module.exports = {
 
   liveTrader: false,
 
+  // Some tests will trade only once yet still be the most profitable. That isnt
+  // sustainable. This will filter out those invalid test settings
+  minimumAllowedTrades: 12,
+
   // This should match the config in gekkos web/vue/UIconfig.js, making sure
   // that port is available.
   apiEndpoint: 'http://127.0.0.1:3000',

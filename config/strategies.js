@@ -1,28 +1,72 @@
-module.exports = [
+const randomExt = require('random-ext');
+
+/**
+ * The closer you can get all these config settings to the best values the
+ * quicker and more efficient your machine will run.
+ * So try to keep your ranges small.
+ *
+ * You should also try keep the number of enabled strategies to a minimum.
+ *
+ * Candle size will need to be adjusted so that it works well with the backtest
+ * time periods.
+ */
+
+
+
+// This shouldn't need to be mutated, just keep it at what you think is best.
+// This is the history to the before trading begins.
+const HISTORY_SIZE = 20;
+
+const list = [
   {
     slug: 'MACD',
-    enabled: true,
+    enabled: false,
     input: () => ({
-      short: 10,
-      long: 21,
-      signal: 9,
+      candleSize: randomExt.integer(10, 1),
+      historySize: HISTORY_SIZE,
+
+      short: randomExt.integer(18, 2),
+      long: randomExt.integer(32, 14),
+      signal: randomExt.integer(16, 4),
       thresholds: {
-        down: -0.025,
-        up: 0.025,
-        persistence: 1,
+        down: -0.00000025,
+        up: 0.00000025,
+        persistence: randomExt.integer(4, 0),
       }
     })
-
-  }, {
+  },
+  {
     slug: 'RSI',
     enabled: true,
     input: () => ({
-      interval: 14,
+      candleSize: randomExt.integer(10, 1),
+      historySize: HISTORY_SIZE,
+
+      interval: randomExt.integer(18, 1),
       thresholds: {
-        low: 30,
-        high: 70,
-        persistence: 1,
+        low: randomExt.integer(50, 20),
+        high: randomExt.integer(90, 60),
+        persistence: randomExt.integer(4, 0),
       }
     })
   }
 ];
+
+const getEnabled = () => {
+  return list.filter(strategy => strategy.enabled);
+};
+
+const getNewStrategyInput = (slug) => {
+  return listPointers[slug].input();
+};
+
+const listPointers = list.reduce((map, obj, index) => {
+    map[obj.slug] = list[index];
+    return map;
+}, {});
+
+module.exports = Object.assign({
+  list,
+  getEnabled,
+  getNewStrategyInput
+}, listPointers);

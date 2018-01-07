@@ -26,7 +26,10 @@
   "homepage": "https://github.com/DustinJSilk/reactive-trader#readme",
   "dependencies": {
     "child": "0.0.3",
+    "genetic-js": "git+https://github.com/liranh85/genetic-js.git",
     "moment": "^2.20.1",
+    "mongojs": "2.4.1",
+    "random-ext": "2.6.1",
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "toml": "^2.3.3"

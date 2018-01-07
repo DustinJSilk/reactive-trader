@@ -33,9 +33,9 @@ class ReativeTrader {
   }
 
   async runStrategy(strategy) {
-    await this.configBuilder.buildStrategyConfig(strategy);
-    console.log('Running strategy: ', strategy.slug);
-    this.gekkoManager.runTrader();
+    // await this.configBuilder.buildStrategyConfig(strategy);
+    // console.log('Running strategy: ', strategy.slug);
+    // this.gekkoManager.runTrader();
   }
 
   keepRunning() {

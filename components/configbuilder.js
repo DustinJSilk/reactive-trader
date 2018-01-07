@@ -13,7 +13,7 @@ const Period = {
   HOURS: 'hours',
 };
 
-const DATE_FORMAT = 'YYYY-MM-DD hh:mm';
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm';
 
 const ErrorMessage = {
   BUILDING_CONFIG: 'Something went wrong building the configuration file:\n',
@@ -54,13 +54,11 @@ class ConfigBuilder {
   /**
    * Returns the config specifically for use with the api/backtest endpoint.
    */
-  async getBacktestConfig(strategy, dateRange) {
-    console.log('Building backtesting config');
-
+  async getBacktestConfig(strategy, backtestRange) {
     try {
       let data = this.duplicateGekkoConfigObject();
       data = this.addStrategy(data, strategy);
-      data = this.addBacktestDateRange(data, dateRange);
+      data = this.addBacktestDateRange(data, backtestRange);
       data = this.addCurrencyAsset(data);
       return data;
 
@@ -120,22 +118,25 @@ class ConfigBuilder {
   }
 
   addImportDateRange(data) {
-    data.importer = {};
-    data.importer.daterange = {
-      from: moment().subtract(config.backtestRange, Period.HOURS)
-          .format(DATE_FORMAT),
-      to: moment().format(DATE_FORMAT)
+    data.importer = {
+      daterange: {
+        from: moment().subtract(config.backtestRange, Period.HOURS)
+            .format(DATE_FORMAT),
+        to: moment().format(DATE_FORMAT)
+      }
     };
 
     return data;
   }
 
   addBacktestDateRange(data, range) {
-    data.backtest = {};
-    data.backtest.daterange = {
-      from: moment().subtract(range, Period.HOURS).format(DATE_FORMAT),
-      to: moment().format(DATE_FORMAT)
+    data.backtest = {
+      daterange: {
+        from: moment().subtract(range, Period.HOURS).format(DATE_FORMAT),
+        to: moment().format(DATE_FORMAT)
+      }
     };
+    console.log(range, moment().format(DATE_FORMAT), moment().subtract(range, Period.HOURS).format(DATE_FORMAT));
 
     return data;
   }

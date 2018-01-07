@@ -55,7 +55,7 @@ class GekkoManager {
 
     return new Promise((resolve, reject) => {
       this.server = child({command: NODE, args: Options.SERVER,
-        cbStdout: data => console.log('out ' + data),
+        cbStdout: data => {},
         cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
           console.log('Server quit unexpectedly', exitCode)
@@ -63,7 +63,10 @@ class GekkoManager {
         },
       });
 
-      this.server.start(resolve);
+      this.server.start();
+
+      // TODO: Check stdout for when its up and running properly
+      setTimeout(resolve, 4000);
     });
   }
 

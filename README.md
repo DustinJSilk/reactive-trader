@@ -17,15 +17,16 @@ Run these 3 commands from your Gekko repository:
 - $ git clone https://github.com/DustinJSilk/reactive-trader
 - $ cd ./reactive-trader
 - $ npm install
-- $ cp ./sample-config.js ./config.js
+- $ cp ./config/sample-config.js ./config/config.js
 
 ## Running
 
 This app will run in place of Gekko and on top of it. Make sure to shutdown any other trading instances first.
 
-Setup config.js to your liking.
+Make sure you configure ./config/config.js and ./config/strategies.js first.
 
 $ npm run reactive-trading
+
 
 ## Database
 
@@ -52,9 +53,10 @@ The basic future:
 - Setup strategy updating intervals
 - Figure out the thresholds problem mentioned above
 - Setup backtesting for the whole bot.
-- Add a UI layer to see running stats
+- Log and display trading results / stats
 - Add proper logging
 - Begin paper trading
+- Add a UI layer to see running stats
 - Begin live trading
 - Run a Genetic algorithm on this app to find the ultimate perfect settings.
 - Profit.

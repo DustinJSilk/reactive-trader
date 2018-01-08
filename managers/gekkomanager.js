@@ -33,14 +33,21 @@ class GekkoManager {
     console.log('Importing data');
 
     return new Promise((resolve, reject) => {
-      child({command: NODE, args: Options.IMPORT,
-        cbStdout: data => console.log('out ' + data),
+      const importer = child({command: NODE, args: Options.IMPORT,
+        cbStdout: data => {
+          console.log('out ' + data);
+          if (data.indexOf('Done importing!') >= 0) {
+            importer.stop();
+            resolve();
+          }
+        },
         cbStderr: data => console.log('err ' + data),
         cbClose: exitCode => {
-          console.log('Import complete');
           resolve();
         },
-      }).start();
+      });
+
+      importer.start();
     });
   }
 

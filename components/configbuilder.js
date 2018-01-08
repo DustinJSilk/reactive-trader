@@ -136,7 +136,6 @@ class ConfigBuilder {
         to: moment().format(DATE_FORMAT)
       }
     };
-    console.log(range, moment().format(DATE_FORMAT), moment().subtract(range, Period.HOURS).format(DATE_FORMAT));
 
     return data;
   }

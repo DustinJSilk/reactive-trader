@@ -9,9 +9,9 @@ const strategies = require('../config/strategies');
 
 const GENETIC_CONFIG = {
   iterations: 12,
-  size: 10,
+  size: 20,
   crossover: 0.3,
-  mutation: 0.3,
+  mutation: 0.05,
   skip: 0,
 };
 
@@ -59,11 +59,10 @@ class StrategyFinder {
     genetic.fitness = this.fitness.bind(this);
     genetic.generation = this.generation.bind(this);
 
-    // TODO: Make sure the top performing result returns in the last generation
-    // since this GA plugin sucks and im not sure yet.
+    let results = []
+
     const promise = new Promise((resolve, reject) => {
       genetic.notification = function(pop, generation, stats, isFinished) {
-        // console.log('Generation ', generation, pop);
         if (isFinished && generation == GENETIC_CONFIG.iterations) {
           resolve(pop);
         };
@@ -83,19 +82,23 @@ class StrategyFinder {
   };
 
   optimize(a, b) {
-    return a.profit >= b.profit;
+    // If they both are above / below minimumAllowedTrades then order by profit,
+    // otherwise the one that is above the minimumAllowedTrades comes first.
+    if (a.trades >= config.minimumAllowedTrades &&
+        b.trades >= config.minimumAllowedTrades ||
+        a.trades < config.minimumAllowedTrades &&
+        b.trades < config.minimumAllowedTrades ) {
+      return a.profit >= b.profit;
+
+    } else {
+      return a.trades >= b.trades;
+    }
   }
 
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
         config.backtestRange);
     const test = await this.backtester.run(backtestConfig);
-    console.log(entity.input);
-    console.log(test);
-    // Ignores tests that don't make enough trades.
-    if (test.trades < config.minimumAllowedTrades) {
-      test.profit = -999999;
-    }
 
     return test;
   }

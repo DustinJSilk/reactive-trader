@@ -4,8 +4,8 @@
   "description": "A bot managing a bot making money.",
   "main": "index.js",
   "scripts": {
-    "reactive-trading": "node index.js",
-    "frontend": "node frontend/server.js",
+    "trade": "node index.js -r",
+    "frontend": "node index.js -u",
     "build": "cd frontend && npm install && cd ../"
   },
   "repository": {
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/DustinJSilk/reactive-trader#readme",
   "dependencies": {
     "child": "0.0.3",
+    "commander": "2.12.2",
     "ejs": "2.5.7",
     "express": "4.16.2",
     "genetic-js": "git+https://github.com/liranh85/genetic-js.git",

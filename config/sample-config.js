@@ -20,6 +20,9 @@ module.exports = {
   // that port is available.
   apiEndpoint: 'http://127.0.0.1:3000',
 
+  // Port for the frontend to run on.
+  port: 8080,
+
   // verbose, debug, silent
   logging: 'debug',
 

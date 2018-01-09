@@ -25,7 +25,7 @@ This app will run in place of Gekko and on top of it. Make sure to shutdown any 
 
 Make sure you configure ./config/config.js and ./config/strategies.js first.
 
-$ npm run reactive-trading
+$ npm run trade
 
 ## Frontend
 

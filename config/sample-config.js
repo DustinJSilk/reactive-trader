@@ -1,6 +1,6 @@
 module.exports = {
-  // The number of hours to run the initial backtest on before starting
-  backtestRange: 2,
+  // The number of days to run the initial backtest on before starting
+  backtestRange: 1,
 
   // The approximate number of candles between updating the strategy settings
   updateSettingsTime: 24,
@@ -14,7 +14,7 @@ module.exports = {
 
   // Some tests will trade only once yet still be the most profitable. That isnt
   // sustainable. This will filter out those invalid test settings
-  minimumAllowedTrades: 12,
+  minimumAllowedTrades: 4,
 
   // This should match the config in gekkos web/vue/UIconfig.js, making sure
   // that port is available.
@@ -28,18 +28,6 @@ module.exports = {
       exchange: 'poloniex',
       currency: 'BTC',
       asset: 'XEM',
-    },
-
-    tradingAdvisor: {
-      enabled: false,
-      candleSize: 1,
-      historySize: 3,
-      adapter: 'sqlite'
-    }
-
-    simulationBalance: {
-      'asset': 1,
-      'currency': 1
     },
 
     slippage: 0.05,

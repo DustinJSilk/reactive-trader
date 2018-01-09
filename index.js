@@ -3,6 +3,7 @@ const fs = require('fs');
 const ConfigBuilder = require('./components/configbuilder');
 const GekkoManager = require('./managers/gekkomanager');
 const StrategyFinder = require('./components/strategyfinder');
+const config = require('./config/config');
 
 const InfoMessage = {
   START: 'Running Reactive Trader',
@@ -33,6 +34,13 @@ class ReativeTrader {
   }
 
   async runStrategy(strategy) {
+    if (config.paperTrader || config.liveTrader) {
+      const tradeType = config.paperTrader ? 'paper' : 'live';
+      console.log(`About to start ${tradeType} trading.`);
+      console.log(`I've commented it out for now though.`);
+    } else {
+      console.log('You need to enable live or paper trading.');
+    }
     // await this.configBuilder.buildStrategyConfig(strategy);
     // console.log('Running strategy: ', strategy.slug);
     // this.gekkoManager.runTrader();

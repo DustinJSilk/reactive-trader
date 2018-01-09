@@ -37,7 +37,7 @@ I had problems with SQLite. Switch to postgres or mongodb.
 Some strategies (~MACD) use threshold values that can vary a lot from coin to coin.
 Some coins might need values between 0.05 and -0.05 while others will need them between 0.00000005 and -0.00000005.
 This makes finding the correct Min and Max values time consuming. (Either manually with https://github.com/DustinJSilk/gekkoga-plus-ui or computationally which would require time and processing power).
-These thresholds are linked to the individual markets currency value.
+These thresholds are linked to the individual markets currency value (I think).
 The solution would be to use a percentage Min / Max. This is in the road map.
 
 ## Roadmap
@@ -53,6 +53,7 @@ The basic future:
 - Setup strategy updating intervals
 - Figure out the thresholds problem mentioned above
 - Setup backtesting for the whole bot.
+- Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
 - Log and display trading results / stats
 - Add proper logging
 - Begin paper trading

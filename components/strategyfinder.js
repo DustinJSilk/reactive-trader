@@ -8,10 +8,10 @@ const config = require('../config/config');
 const strategies = require('../config/strategies');
 
 const GENETIC_CONFIG = {
-  iterations: 20,
-  size: 25,
+  iterations: 10,
+  size: 40,
   crossover: 0.9,
-  mutation: 0.5,
+  mutation: 0.2,
   skip: 0,
   fittestAlwaysSurvives: true
 };
@@ -30,7 +30,7 @@ class StrategyFinder {
     await this.gekkoManager.importData();
 
     const strategy =  await this.testAllStrategies();
-    console.log('Top performing strategy: ', strategy);
+    console.log('Top performing strategy: ', JSON.stringify(strategy));
 
     return strategy;
   }
@@ -65,9 +65,9 @@ class StrategyFinder {
     const promise = new Promise((resolve, reject) => {
       genetic.notification = (pop, generation, stats, isFinished) => {
         results.push(...pop);
-        console.log(pop.map(p => p.fitness.profit.toFixed(3)).join(' _ '));
         if (isFinished && generation == GENETIC_CONFIG.iterations) {
           results.sort((a, b) => this.optimize(a.fitness, b.fitness));
+          results.reverse();
           resolve(results);
         };
       };
@@ -102,7 +102,8 @@ class StrategyFinder {
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
         config.backtestRange);
-    const test = await this.backtester.run(backtestConfig);
+    // console.log(backtestConfig);
+    let test = await this.backtester.run(backtestConfig);
 
     return test;
   }

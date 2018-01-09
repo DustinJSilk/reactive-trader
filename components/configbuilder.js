@@ -3,7 +3,7 @@ const fs = require('fs');
 const moment = require('moment');
 
 const config = require('../config/config');
-const gekkoConfig = require('../config/gekko-config');
+const gekkoConfig = require('../../config');
 
 
 const TEMP_CONFIG_LOCATION = __dirname + '/../config/tmp-config.js';
@@ -13,7 +13,7 @@ const Period = {
   HOURS: 'hours',
 };
 
-const DATE_FORMAT = 'YYYY-MM-DD HH:mm';
+const DATE_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 
 const ErrorMessage = {
   BUILDING_CONFIG: 'Something went wrong building the configuration file:\n',
@@ -103,14 +103,13 @@ class ConfigBuilder {
   }
 
   addCurrencyAsset(data) {
-    data.watch = config.gekko.watch;
+    data.watch = config.watch;
     return data;
   }
 
   addStrategy(data, strategy) {
-    data.tradingAdvisor = config.gekko.tradingAdvisor;
+    data.tradingAdvisor.enabled = true;
     data.tradingAdvisor.method = strategy.slug;
-    // TODO: Setup candle size / history size
     data.tradingAdvisor.candleSize = strategy.input.candleSize;
     data.tradingAdvisor.historySize = strategy.input.historySize;
     data[strategy.slug] = strategy.input;
@@ -120,7 +119,7 @@ class ConfigBuilder {
   addImportDateRange(data) {
     data.importer = {
       daterange: {
-        from: moment().subtract(config.backtestRange, Period.HOURS)
+        from: moment().subtract(config.backtestRange, Period.DAYS)
             .format(DATE_FORMAT),
         to: moment().format(DATE_FORMAT)
       }
@@ -132,7 +131,7 @@ class ConfigBuilder {
   addBacktestDateRange(data, range) {
     data.backtest = {
       daterange: {
-        from: moment().subtract(range, Period.HOURS).format(DATE_FORMAT),
+        from: moment().subtract(range, Period.DAYS).format(DATE_FORMAT),
         to: moment().format(DATE_FORMAT)
       }
     };

@@ -1,4 +1,7 @@
 node_modules
+.sass-cache
+frontend/static/js
+frontend/static/css
 
 tmp-config.js
 config.js

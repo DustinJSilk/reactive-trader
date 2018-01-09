@@ -4,7 +4,9 @@
   "description": "A bot managing a bot making money.",
   "main": "index.js",
   "scripts": {
-    "reactive-trading": "node index.js"
+    "reactive-trading": "node index.js",
+    "frontend": "node frontend/server.js",
+    "build": "cd frontend && npm install && cd ../"
   },
   "repository": {
     "type": "git",
@@ -26,12 +28,27 @@
   "homepage": "https://github.com/DustinJSilk/reactive-trader#readme",
   "dependencies": {
     "child": "0.0.3",
+    "ejs": "2.5.7",
+    "express": "4.16.2",
     "genetic-js": "git+https://github.com/liranh85/genetic-js.git",
     "moment": "^2.20.1",
     "mongojs": "2.4.1",
     "random-ext": "2.6.1",
     "request": "2.83.0",
     "request-promise": "4.2.2",
+    "socket.io": "2.0.4",
     "toml": "^2.3.3"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-polyfill": "6.26.0",
+    "babel-preset-latest": "6.24.1",
+    "babelify": "8.0.0",
+    "grunt": "1.0.1",
+    "grunt-babel": "7.0.0",
+    "grunt-browserify": "5.2.0",
+    "grunt-contrib-sass": "1.0.0",
+    "grunt-notify": "0.4.5",
+    "load-grunt-tasks": "3.5.2"
   }
 }

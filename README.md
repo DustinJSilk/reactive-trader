@@ -27,6 +27,14 @@ Make sure you configure ./config/config.js and ./config/strategies.js first.
 
 $ npm run reactive-trading
 
+## Frontend
+
+This is still being built and not part of the full app just yet. For now it will
+need to be run in a separate terminal window. (It's also an empty page still)
+
+$ npm run build
+
+$ npm run frontend
 
 ## Database
 
@@ -36,9 +44,10 @@ I had problems with SQLite. Switch to postgres or mongodb.
 
 Some strategies (~MACD) use threshold values that can vary a lot from coin to coin.
 Some coins might need values between 0.05 and -0.05 while others will need them between 0.00000005 and -0.00000005.
-This makes finding the correct Min and Max values time consuming. (Either manually with https://github.com/DustinJSilk/gekkoga-plus-ui or computationally which would require time and processing power).
+This makes finding the correct Min and Max values time consuming and expensive.
 These thresholds are linked to the individual markets currency value (I think).
-The solution would be to use a percentage Min / Max. This is in the road map.
+
+Rather use the PPO strategy since I've been informed that it is MACD but with percentages.
 
 ## Roadmap
 

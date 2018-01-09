@@ -1,3 +1,5 @@
+const EventEmitter = require('events');
+
 const Genetic = require('genetic-js');
 const randomExt = require('random-ext');
 
@@ -16,11 +18,25 @@ const GENETIC_CONFIG = {
   fittestAlwaysSurvives: true
 };
 
-class StrategyFinder {
+const EventType = {
+  NEW_TEST_POPULATION: 'new-test-population'
+};
+
+class StrategyFinder extends EventEmitter {
   constructor() {
+    super();
+
     this.gekkoManager = GekkoManager.getInstance();
     this.backtester = new Backtester();
     this.configBuilder = new ConfigBuilder();
+  }
+
+  static getInstance() {
+    if (!this.instance_) {
+      this.instance_ = new StrategyFinder();
+    }
+
+    return this.instance_;
   }
 
   async findNewStrategy() {
@@ -65,6 +81,9 @@ class StrategyFinder {
     const promise = new Promise((resolve, reject) => {
       genetic.notification = (pop, generation, stats, isFinished) => {
         results.push(...pop);
+
+        this.emit(EventType.NEW_TEST_POPULATION, pop[0].slug, pop);
+
         if (isFinished && generation == GENETIC_CONFIG.iterations) {
           results.sort((a, b) => this.optimize(a.fitness, b.fitness));
           results.reverse();
@@ -172,4 +191,7 @@ class StrategyFinder {
   }
 }
 
-module.exports = StrategyFinder;
+module.exports = {
+  EventType,
+  StrategyFinder
+};

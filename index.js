@@ -2,8 +2,8 @@ const fs = require('fs');
 
 const ConfigBuilder = require('./components/configbuilder');
 const GekkoManager = require('./managers/gekkomanager');
-const StrategyFinder = require('./components/strategyfinder');
 const config = require('./config/config');
+const {StrategyFinder} = require('./components/strategyfinder');
 
 const InfoMessage = {
   START: 'Running Reactive Trader',
@@ -17,7 +17,7 @@ class ReativeTrader {
   constructor() {
     this.gekkoManager = GekkoManager.getInstance();
     this.configBuilder = new ConfigBuilder();
-    this.strategyFinder = new StrategyFinder();
+    this.strategyFinder = StrategyFinder.getInstance();
 
     if (this.configBuilder.isValid()) {
       this.start();

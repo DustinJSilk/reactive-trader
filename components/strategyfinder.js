@@ -8,11 +8,12 @@ const config = require('../config/config');
 const strategies = require('../config/strategies');
 
 const GENETIC_CONFIG = {
-  iterations: 12,
-  size: 20,
-  crossover: 0.3,
-  mutation: 0.05,
+  iterations: 20,
+  size: 25,
+  crossover: 0.9,
+  mutation: 0.5,
   skip: 0,
+  fittestAlwaysSurvives: true
 };
 
 class StrategyFinder {
@@ -51,7 +52,7 @@ class StrategyFinder {
 
     const genetic = Genetic.create();
     genetic.optimize = this.optimize;
-    genetic.select1 = Genetic.Select1.Tournament2;
+    genetic.select1 = Genetic.Select1.Fittest;
     genetic.select2 = Genetic.Select2.FittestRandom;
     genetic.seed = this.seed.bind(this, slug);
     genetic.mutate = this.mutate.bind(this);
@@ -62,9 +63,12 @@ class StrategyFinder {
     let results = []
 
     const promise = new Promise((resolve, reject) => {
-      genetic.notification = function(pop, generation, stats, isFinished) {
+      genetic.notification = (pop, generation, stats, isFinished) => {
+        results.push(...pop);
+        console.log(pop.map(p => p.fitness.profit.toFixed(3)).join(' _ '));
         if (isFinished && generation == GENETIC_CONFIG.iterations) {
-          resolve(pop);
+          results.sort((a, b) => this.optimize(a.fitness, b.fitness));
+          resolve(results);
         };
       };
     });
@@ -104,8 +108,8 @@ class StrategyFinder {
   }
 
   crossover(mother, father) {
-    const son = father;
-    const daughter = mother;
+    const son = this.clone(father);
+    const daughter = this.clone(mother);
 
     const len = Object.keys(mother).length;
     const crossPoint = randomExt.integer(len - 1, 1);
@@ -114,15 +118,17 @@ class StrategyFinder {
     for (let i in mother) {
       if (mother.hasOwnProperty(i) && father.hasOwnProperty(i)) {
 
-        // Cross over nested objects.
-        if (typeof mother[i] == 'object' && typeof father[i] == 'object') {
-          const childObject = this.crossover(mother[i], father[i]);
-          son[i] = childObject[0];
-          daughter[i] = childObject[1];
+        if (currPoint >= crossPoint) {
+          // Cross over nested objects.
+          if (typeof mother[i] == 'object' && typeof father[i] == 'object') {
+            const childObject = this.crossover(mother[i], father[i]);
+            son[i] = childObject[0];
+            daughter[i] = childObject[1];
 
-        } else if (currPoint >= crossPoint) {
-          son[i] = mother[i];
-          daughter[i] = father[i];
+          } else {
+            son[i] = mother[i];
+            daughter[i] = father[i];
+          }
         }
       }
 
@@ -143,6 +149,7 @@ class StrategyFinder {
       const keysB = Object.keys(entity.input[target]);
       const mutateIndexB = randomExt.integer(keysB.length - 1, 0);
       const targetB = keysB[mutateIndexB];
+
       entity.input[target][targetB] = newInput[target][targetB];
 
     } else {

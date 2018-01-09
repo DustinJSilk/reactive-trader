@@ -39,14 +39,14 @@ const list = [
     slug: 'RSI',
     enabled: true,
     input: () => ({
-      candleSize: randomExt.integer(10, 1),
+      candleSize: randomExt.integer(20, 1),
       historySize: HISTORY_SIZE,
 
-      interval: randomExt.integer(18, 1),
+      interval: randomExt.integer(16, 8),
       thresholds: {
-        low: randomExt.integer(50, 20),
-        high: randomExt.integer(90, 60),
-        persistence: randomExt.integer(4, 0),
+        low: randomExt.integer(40, 20),
+        high: randomExt.integer(80, 60),
+        persistence: randomExt.integer(2, 0),
       }
     })
   }

@@ -60,9 +60,9 @@ The basic future:
 - ~~Create strategy finder class using a genetic algorithm~~
 - ~~Add mutation to the genetic algorithm~~
 - Setup strategy updating intervals
-- Figure out the thresholds problem mentioned above
 - Setup backtesting for the whole bot.
 - Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
+- Fine tune the Genetic Algorithm
 - Log and display trading results / stats
 - Add proper logging
 - Begin paper trading

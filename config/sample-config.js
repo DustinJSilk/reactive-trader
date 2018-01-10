@@ -29,6 +29,6 @@ module.exports = {
   watch: {
     exchange: 'poloniex',
     currency: 'BTC',
-    asset: 'STRAT',
+    asset: 'XEM',
   }
 }

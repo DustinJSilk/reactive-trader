@@ -66,8 +66,20 @@ Set the connection string to your postgres user name / password combo:
 postgres://user:password@localhost:5432
 ```
 
-You will need to add a database name and of course make sure you create a one
-with that name, too.
+Now you need to create a database. If you have a GUI like pgAdmin 4 just right
+click on databases and hit create. Otherwise run a postgresql terminal and run
+something like this:
+
+```
+CREATE DATABASE gekko
+    WITH
+    OWNER = YOUR_USER_NAME
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+```
+
+Now in your gekko config, set 'database' under postgresql to 'gekko'. (or the
+name your used above.)
 
 
 ## Thresholds problem
@@ -91,8 +103,8 @@ The basic future:
 - ~~Add mutation to the genetic algorithm~~
 - Setup strategy updating intervals
 - Setup backtesting for the whole bot.
-- Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
 - Fine tune the Genetic Algorithm
+- Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
 - Log and display trading results / stats
 - Add proper logging
 - Begin paper trading

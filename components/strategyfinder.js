@@ -40,11 +40,6 @@ class StrategyFinder extends EventEmitter {
   }
 
   async findNewStrategy() {
-    console.log('Finding strategy');
-
-    await this.configBuilder.buildImportConfig();
-    await this.gekkoManager.importData();
-
     const strategy =  await this.testAllStrategies();
     console.log('Top performing strategy: ', JSON.stringify(strategy));
 
@@ -121,7 +116,7 @@ class StrategyFinder extends EventEmitter {
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
         config.backtestRange);
-    // console.log(backtestConfig);
+
     let test = await this.backtester.run(backtestConfig);
 
     return test;

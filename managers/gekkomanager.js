@@ -52,8 +52,6 @@ class GekkoManager {
   }
 
   async runServer() {
-    this.isStoppingGracefully = false;
-
     if (this.server != null) {
       await this.stopServer();
     }
@@ -91,11 +89,10 @@ class GekkoManager {
     });
   }
 
-  runTrader() {
-    console.log('Running trader');
-    console.log('paperTrader: ', config.paperTrader);
-    console.log('liveTrader: ', config.liveTrader);
-
+  async runTrader() {
+    if (this.trader) {
+      await this.stopTrader();
+    }
     return new Promise((resolve, reject) => {
       this.trader = child({command: NODE, args: Options.TRADE,
         cbStdout: data => console.log('out ' + data),
@@ -103,19 +100,21 @@ class GekkoManager {
       });
 
       this.trader.start();
+
+      // TODO: Check stdout for when its up and running properly
+      setTimeout(resolve, 4000);
     });
   }
 
-  stopServer() {
-    console.log('Stopping server');
+  stopTrader() {
+    console.log('Stopping trader');
 
     return new Promise((resolve, reject) => {
-      if (this.server != null) {
-        this.isStoppingGracefully = true;
-        this.server.stop(resolve);
-        this.server = null;
+      if (this.trader != null) {
+        this.trader.stop(resolve);
+        this.trader = null;
       } else {
-        console.log('Stop failed: No server found');
+        console.log('Stop failed: No trader found');
         resolve();
       }
     });

@@ -66,6 +66,10 @@ Set the connection string to your postgres user name / password combo:
 postgres://user:password@localhost:5432
 ```
 
+You will need to add a database name and of course make sure you create a one
+with that name, too.
+
+
 ## Thresholds problem
 
 Some strategies (~MACD) use threshold values that can vary a lot from coin to coin.

@@ -9,15 +9,6 @@ const GekkoManager = require('../managers/gekkomanager');
 const config = require('../config/config');
 const strategies = require('../config/strategies');
 
-const GENETIC_CONFIG = {
-  iterations: 10,
-  size: 40,
-  crossover: 0.9,
-  mutation: 0.2,
-  skip: 0,
-  fittestAlwaysSurvives: true
-};
-
 const EventType = {
   NEW_TEST_POPULATION: 'new-test-population'
 };
@@ -79,7 +70,7 @@ class StrategyFinder extends EventEmitter {
 
         this.emit(EventType.NEW_TEST_POPULATION, pop[0].slug, pop);
 
-        if (isFinished && generation == GENETIC_CONFIG.iterations) {
+        if (isFinished && generation == config.genetic.iterations) {
           results.sort((a, b) => this.optimize(a.fitness, b.fitness));
           results.reverse();
           resolve(results);
@@ -87,7 +78,7 @@ class StrategyFinder extends EventEmitter {
       };
     });
 
-    await genetic.evolve(GENETIC_CONFIG);
+    await genetic.evolve(config.genetic);
 
     return promise;
   }
@@ -96,7 +87,7 @@ class StrategyFinder extends EventEmitter {
    * Set to false to complete
    */
   generation(pop, generation, stats) {
-  	return generation < GENETIC_CONFIG.iterations;
+  	return generation < config.genetic.iterations;
   };
 
   optimize(a, b) {

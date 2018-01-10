@@ -30,5 +30,14 @@ module.exports = {
     exchange: 'poloniex',
     currency: 'BTC',
     asset: 'XEM',
+  },
+
+  genetic: {
+    iterations: 10,
+    size: 40,
+    crossover: 0.9,
+    mutation: 0.8,
+    skip: 0,
+    fittestAlwaysSurvives: true
   }
 }

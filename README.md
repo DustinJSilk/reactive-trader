@@ -101,15 +101,16 @@ The basic future:
 - ~~Properly run a single strategy~~
 - ~~Create strategy finder class using a genetic algorithm~~
 - ~~Add mutation to the genetic algorithm~~
-- Setup strategy updating intervals
+- ~~Setup strategy updating intervals~~
 - Setup backtesting for the whole bot.
 - Fine tune the Genetic Algorithm
-- Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
+- Fine tune the strategy updating loops
 - Log and display trading results / stats
 - Add proper logging
 - Begin paper trading
 - Add a UI layer to see running stats
 - Begin live trading
+- Find a way to to switch strategies without rebooting OR without messing up the end of the current / start of the next trading period
 - Run a Genetic algorithm on this app to find the ultimate perfect settings.
 - Profit.
 

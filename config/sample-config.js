@@ -26,16 +26,9 @@ module.exports = {
   // verbose, debug, silent
   logging: 'debug',
 
-  gekko: {
-    watch: {
-      exchange: 'poloniex',
-      currency: 'BTC',
-      asset: 'XEM',
-    },
-
-    slippage: 0.05,
-    feeTaker: 0.25,
-    feeMaker: 0.25,
-    feeUsing: 'taker', // maker || taker
+  watch: {
+    exchange: 'poloniex',
+    currency: 'BTC',
+    asset: 'STRAT',
   }
 }

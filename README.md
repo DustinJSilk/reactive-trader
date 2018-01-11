@@ -104,6 +104,7 @@ The basic future:
 - ~~Setup strategy updating intervals~~
 - Setup backtesting for the whole bot.
 - Fine tune the Genetic Algorithm
+- Don't import data that already exists when running large backtests
 - Fine tune the strategy updating loops
 - Log and display trading results / stats
 - Add proper logging

@@ -20,6 +20,8 @@ class StrategyFinder extends EventEmitter {
     this.gekkoManager = GekkoManager.getInstance();
     this.backtester = new Backtester();
     this.configBuilder = new ConfigBuilder();
+
+    this.backtestRange = null;
   }
 
   static getInstance() {
@@ -31,10 +33,14 @@ class StrategyFinder extends EventEmitter {
   }
 
   async findNewStrategy() {
-    const strategy =  await this.testAllStrategies();
-    console.log('Top performing strategy: ', JSON.stringify(strategy));
+    this.backtestRange = null
+    return await this.testAllStrategies();
+  }
 
-    return strategy;
+  async findStrategyBetween(start, end) {
+    this.backtestRange = {start, end};
+    console.log(this.backtestRange);
+    return await this.testAllStrategies();
   }
 
   async testAllStrategies() {
@@ -106,11 +112,9 @@ class StrategyFinder extends EventEmitter {
 
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
-        config.backtestRange);
+        this.backtestRange);
 
-    let test = await this.backtester.run(backtestConfig);
-
-    return test;
+    return await this.backtester.run(backtestConfig);
   }
 
   crossover(mother, father) {

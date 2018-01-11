@@ -13,7 +13,7 @@ const Period = {
   HOURS: 'hours',
 };
 
-const DATE_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const ErrorMessage = {
   BUILDING_CONFIG: 'Something went wrong building the configuration file:\n',
@@ -72,12 +72,12 @@ class ConfigBuilder {
    * minimum of 1 day at least.)
    * TODO: Switch to async
    */
-  buildImportConfig() {
+  buildImportConfig(range) {
     console.log('Building import config');
 
     return this.removeOldConfig()
         .then(() => this.duplicateGekkoConfigObject())
-        .then(data => this.addImportDateRange(data))
+        .then(data => this.addImportDateRange(data, range))
         .then(data => this.addCurrencyAsset(data))
         .then(data => this.saveFile(data))
         .catch(err => console.error(ErrorMessage.BUILDING_CONFIG, err))
@@ -116,13 +116,9 @@ class ConfigBuilder {
     return data;
   }
 
-  addImportDateRange(data) {
+  addImportDateRange(data, range) {
     data.importer = {
-      daterange: {
-        from: moment().subtract(config.backtestRange, Period.DAYS)
-            .format(DATE_FORMAT),
-        to: moment().format(DATE_FORMAT)
-      }
+      daterange: this.getDateRange(range)
     };
 
     return data;
@@ -130,13 +126,22 @@ class ConfigBuilder {
 
   addBacktestDateRange(data, range) {
     data.backtest = {
-      daterange: {
-        from: moment().subtract(range, Period.DAYS).format(DATE_FORMAT),
-        to: moment().format(DATE_FORMAT)
-      }
+      daterange: this.getDateRange(range)
     };
 
     return data;
+  }
+
+  getDateRange(range) {
+    const from = range ? range.start : moment()
+        .subtract(config.backtestRange, Period.DAYS);
+
+    const to = range ? range.end : moment();
+
+    return {
+      from: from.format(DATE_FORMAT),
+      to: to.format(DATE_FORMAT)
+    }
   }
 }
 

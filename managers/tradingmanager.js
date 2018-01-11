@@ -74,6 +74,7 @@ class TradingManager {
       return;
     }
 
+    console.log('Running strategy: ', strategy);
     await this.configBuilder.buildStrategyConfig(strategy);
     await this.gekkoManager.runTrader();
   }

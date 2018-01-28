@@ -1,16 +1,29 @@
 import 'babel-polyfill';
+import Tablesort from 'tablesort';
 
-const EventType = {
-  CLICK: 'click'
-}
+import Table from './components/table';
+import {EventType} from '../../components/strategyfinder';
+
 
 class App {
   constructor() {
     this.socket = io();
+    this.table = new Table();
+
+    this.addTableSorting();
+    this.addEventListeners();
   }
 
   addEventListeners() {
     this.socket.on('ui-update', () => window.location.reload());
+
+    this.socket.on(EventType.NEW_TEST_POPULATION, (slug, data) =>
+      this.table.populate(slug, data));
+  }
+
+  addTableSorting() {
+    const tables = [...document.getElementsByTagName('table')];
+    tables.forEach(table => new Tablesort(table));
   }
 
   async wait(time) {

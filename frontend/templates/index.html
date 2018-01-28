@@ -8,9 +8,29 @@
   <title>Reactive trader | Gekko</title>
 
   <link rel="stylesheet" href="/static/css/main.css">
-
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body>
+  <div class="page-width">
+    <h1>Reactive Trader</h1>
+    <h3>With <a href="https://gekko.wizb.it/">Gekko</a></h3>
+
+    <div class="results">
+      <table id="fitness-table">
+        <thead>
+          <tr>
+            <th>Start price</th>
+            <th>End price</th>
+            <th>Proft</th>
+            <th>Market</th>
+            <th>Trades</th>
+            <th><stong>Yearly profit</strong></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
   <script src="/static/js/app.js"></script>

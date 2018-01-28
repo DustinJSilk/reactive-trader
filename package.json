@@ -40,6 +40,7 @@
     "request": "2.83.0",
     "request-promise": "4.2.2",
     "socket.io": "2.0.4",
+    "tablesort": "^5.0.2",
     "toml": "^2.3.3"
   },
   "devDependencies": {
@@ -51,6 +52,7 @@
     "grunt-babel": "7.0.0",
     "grunt-browserify": "5.2.0",
     "grunt-contrib-sass": "1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-notify": "0.4.5",
     "load-grunt-tasks": "3.5.2"
   }

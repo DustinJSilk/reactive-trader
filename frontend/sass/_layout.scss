@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-standard;
+}
+
+.page-width {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 100px;
+}

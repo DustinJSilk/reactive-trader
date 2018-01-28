@@ -4,6 +4,7 @@
   "description": "A bot managing a bot making money.",
   "main": "index.js",
   "scripts": {
+    "all": "node index.js -u -r",
     "trade": "node index.js -r",
     "frontend": "node index.js -u",
     "build": "cd frontend && npm install && cd ../"

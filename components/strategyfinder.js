@@ -39,20 +39,23 @@ class StrategyFinder extends EventEmitter {
 
   async findStrategyBetween(start, end) {
     this.backtestRange = {start, end};
-    console.log(this.backtestRange);
     return await this.testAllStrategies();
   }
 
   async testAllStrategies() {
     const reducerStart = {fitness: {profit: -99999}};
     const enabledStrategies = strategies.getEnabled();
+    const testResults = [];
 
-    return await enabledStrategies.reduce(async (prevPromise, strategy) => {
+    for (let i = 0; i < enabledStrategies.length; i++) {
+      const strategy = enabledStrategies[i];
       const result = await this.testStrategy(strategy.slug);
-      const best = await prevPromise;
+      testResults.push(result);
+    }
 
-      return result[0].fitness.profit > best.fitness.profit ? result[0] : best;
-    }, Promise.resolve(reducerStart));
+    return testResults.reduce((accum, curr) => {
+      return curr[0].fitness.profit > accum.fitness.profit ? curr[0] : accum;
+    }, reducerStart);
   }
 
   async testStrategy(slug) {
@@ -73,6 +76,8 @@ class StrategyFinder extends EventEmitter {
     const promise = new Promise((resolve, reject) => {
       genetic.notification = (pop, generation, stats, isFinished) => {
         results.push(...pop);
+
+        console.log(pop.map(p => p.fitness.relativeYearlyProfit).join('    '));
 
         this.emit(EventType.NEW_TEST_POPULATION, pop[0].slug, pop);
 
@@ -113,8 +118,10 @@ class StrategyFinder extends EventEmitter {
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
         this.backtestRange);
-
-    return await this.backtester.run(backtestConfig);
+    const result = await this.backtester.run(backtestConfig);
+    result.profit = parseFloat(result.profit);
+    result.relativeYearlyProfit = parseFloat(result.relativeYearlyProfit);
+    return result;
   }
 
   crossover(mother, father) {

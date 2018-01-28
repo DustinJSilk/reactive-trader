@@ -10,6 +10,12 @@ Before beginning it will pull the latest candles and find the best strategy to r
 
 ## THIS APP IS STILL IN ACTIVE DEVELOPMENT AND NOT YET FINISHED OR READY TO ROLL
 
+## Prerequisites
+
+This bot assumes that you already have Gekko setup to run. Meaning if you ran the Gekko command line AND / OR frontend server for importing, backtesting, paper trading or live trading - everything will work. Thats because this bot simply hooks into an already functioning Gekko.
+
+Make sure you have the latest Node.js installed. And also make sure Gekko is running with a decent database. (See below for postgres information. However, you should follow Gekkos setup instructions.)
+
 ## Install
 
 Run these 3 commands from your Gekko repository:
@@ -26,6 +32,10 @@ $ cp ./config/sample-config.js ./config/config.js
 This app will run in place of Gekko and on top of it. Make sure to shutdown any other trading instances first.
 
 Make sure you configure ./config/config.js and ./config/strategies.js first.
+```
+$ node index.js --help
+```
+
 ```
 $ npm run trade
 ```
@@ -102,8 +112,10 @@ The basic future:
 - ~~Create strategy finder class using a genetic algorithm~~
 - ~~Add mutation to the genetic algorithm~~
 - ~~Setup strategy updating intervals~~
-- Setup backtesting for the whole bot.
+- Setup backtesting for the whole bot. (Kinda done, but its not 100% accurate)
 - Fine tune the Genetic Algorithm
+- Store previous test results and config to be mutated with new test entities.
+- Stop depending on genetic-js. Write the foundation for the Genetic Algorithm myself.
 - Don't import data that already exists when running large backtests
 - Fine tune the strategy updating loops
 - Log and display trading results / stats

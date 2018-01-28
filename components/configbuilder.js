@@ -108,6 +108,9 @@ class ConfigBuilder {
   }
 
   addStrategy(data, strategy) {
+    data.paperTrader.enabled = config.paperTrader;
+    data.trader.enabled = config.liveTrader;
+
     data.tradingAdvisor.enabled = true;
     data.tradingAdvisor.method = strategy.slug;
     data.tradingAdvisor.candleSize = strategy.input.candleSize;

@@ -48,19 +48,24 @@ class TradingManager {
   }
 
   async updateStrategy() {
-    // Set new strategy
-    const strategy = await this.strategyFinder.findNewStrategy();
-    await this.runStrategy(strategy.entity);
+    try {
+      // Set new strategy
+      const strategy = await this.strategyFinder.findNewStrategy();
+      await this.runStrategy(strategy.entity);
 
-    // Schedule the update
+      this.scheduleUpdate(strategy);
+    } catch (err) {
+      throw Error('Error finding new strategy: ', err);
+    }
+  }
+
+  scheduleUpdate(strategy) {
     const updateInterval = config.updateSettingsTime;
     const candleSize = strategy.entity.input.candleSize;
     const interval = updateInterval * candleSize * 1000 * 60;
     const fireAt = new Date(Date.now() + interval);
 
-    this.updateSchedule = schedule.scheduleJob(fireAt, () =>
-        this.updateStrategy());
-
+    schedule.scheduleJob(fireAt, () => this.updateStrategy());
     console.log('The next update will happen at ' + fireAt);
   }
 
@@ -74,9 +79,14 @@ class TradingManager {
       return;
     }
 
-    console.log('Running strategy: ', strategy);
-    await this.configBuilder.buildStrategyConfig(strategy);
-    await this.gekkoManager.runTrader();
+    try {
+      console.log('Running strategy: ', strategy);
+      await this.configBuilder.buildStrategyConfig(strategy);
+      await this.gekkoManager.runTrader();
+
+    } catch (err) {
+      throw Error('Error starting to trade: ', err);
+    }
   }
 }
 

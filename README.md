@@ -42,13 +42,13 @@ $ npm run trade
 
 ## Frontend
 
-This is still being built and not part of the full app just yet. For now it will
-need to be run in a separate terminal window. (It's also an empty page still)
+```
+$ node index.js --run --ui
+```
 
-```
-$ npm run build
-$ npm run frontend
-```
+This will run the bot and the UI. Hit `http://localhost:8080` [or with the port set in your config file] and you will see the results of the test in a sortable table.
+
+This feature is still very basic and just spits out test results as they come.
 
 ## Database
 

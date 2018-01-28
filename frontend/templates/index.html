@@ -13,18 +13,37 @@
 <body>
   <div class="page-width">
     <h1>Reactive Trader</h1>
-    <h3>With <a href="https://gekko.wizb.it/">Gekko</a></h3>
+
+    <div class="configuration">
+      <div class="watch">
+        <span class="exchange"><%= watch.exchange %></span>
+        <div class="asset-currency">
+          <span><%= watch.currency %></span>
+          -
+          <span><%= watch.asset %></span>
+        </div>
+      </div>
+      <div class="algorithm">
+        <ul>
+          <li><span>Iterations:</span> <%= genetic.iterations %>
+          <li><span>Size:</span> <%= genetic.size %>
+          <li><span>Crossover:</span> <%= genetic.crossover %>
+          <li><span>Mutation:</span> <%= genetic.mutation %>
+          <li><span>Skip:</span> <%= genetic.skip %>
+          <li><span>FittestAlwaysSurvives:</span> <%= genetic.fittestAlwaysSurvives %>
+        </ul>
+      </div>
+      <%=  %>
+    </div>
 
     <div class="results">
       <table id="fitness-table">
         <thead>
           <tr>
-            <th>Start price</th>
-            <th>End price</th>
-            <th>Profit</th>
-            <th>Market</th>
             <th>Trades</th>
-            <th><stong>Yearly profit</strong></th>
+            <th>Market</th>
+            <th>Profit</th>
+            <th data-sort-default><stong>Relative Yearly profit</strong></th>
           </tr>
         </thead>
         <tbody></tbody>

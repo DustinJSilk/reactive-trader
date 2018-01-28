@@ -1,28 +1,33 @@
-const FITNESS_TABLE = '#fitness-table tbody';
+import Tablesort from './tablesort';
 
+const Selector = {
+  FITNESS_TABLE: '#fitness-table',
+  FITNESS_BODY: '#fitness-table tbody'
+};
 
 export default class Table {
   constructor() {
-    this.fitnessTable = document.querySelector(FITNESS_TABLE);
+    this.fitnessTable = document.querySelector(Selector.FITNESS_TABLE);
+    this.fitnessTableBody = document.querySelector(Selector.FITNESS_BODY);
+
+    this.sortable = new Tablesort(this.fitnessTable, {
+      descending: true
+    });
   }
 
   populate(slug, data) {
     data.forEach(test => {
-      const profit = Math.round(test.fitness.profit * 100) / 100;
-      const market = Math.round(test.fitness.market * 100) / 100;
-      const yearlyProfit = Math.round(test.fitness.yearlyProfit * 100) / 100;
-
       const fitnessTemplate = `
         <tr>
-          <td>${test.fitness.startPrice}</td>
-          <td>${test.fitness.endPrice}</td>
-          <td>${profit}</td>
-          <td>${market}</td>
           <td>${test.fitness.trades}</td>
-          <td>${yearlyProfit}</td>
+          <td>${test.fitness.market}</td>
+          <td>${test.fitness.profit}</td>
+          <td>${test.fitness.relativeYearlyProfit}</td>
         </tr>`;
 
-      this.fitnessTable.innerHTML += fitnessTemplate;
+      this.fitnessTableBody.innerHTML += fitnessTemplate;
     });
+
+    this.sortable.refresh();
   }
 }

@@ -70,6 +70,10 @@ module.exports = function(grunt){
   });
 
   grunt.registerTask("lint", ["eslint"]);
+  grunt.registerTask("silent-build", [
+    "browserify",
+    "sass"
+  ]);
   grunt.registerTask("default", [
     "browserify",
     "sass",

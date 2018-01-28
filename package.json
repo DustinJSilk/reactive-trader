@@ -7,7 +7,7 @@
     "all": "node index.js -u -r",
     "trade": "node index.js -r",
     "frontend": "node index.js -u",
-    "build": "cd frontend && npm install && cd ../"
+    "build": "npm install && grunt silent-build"
   },
   "repository": {
     "type": "git",

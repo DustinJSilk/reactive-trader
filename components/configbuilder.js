@@ -42,6 +42,7 @@ class ConfigBuilder {
       await this.removeOldConfig();
 
       let data = this.duplicateGekkoConfigObject();
+      data = this.setPaperAndLiveTraders(data, config.paperTrader, config.liveTrader);
       data = this.addStrategy(data, strategy);
       data = this.addCurrencyAsset(data);
       data = await this.saveFile(data);
@@ -70,17 +71,21 @@ class ConfigBuilder {
   /**
    * Builds the config specifically for the inital config. (I think theres a
    * minimum of 1 day at least.)
-   * TODO: Switch to async
    */
-  buildImportConfig(range) {
+  async buildImportConfig(range) {
     console.log('Building import config');
 
-    return this.removeOldConfig()
-        .then(() => this.duplicateGekkoConfigObject())
-        .then(data => this.addImportDateRange(data, range))
-        .then(data => this.addCurrencyAsset(data))
-        .then(data => this.saveFile(data))
-        .catch(err => console.error(ErrorMessage.BUILDING_CONFIG, err))
+    try {
+      await this.removeOldConfig();
+      let data = this.duplicateGekkoConfigObject();
+      data = this.setPaperAndLiveTraders(data, true, false);
+      data = this.addImportDateRange(data, range);
+      data = this.addCurrencyAsset(data);
+      data = this.saveFile(data);
+
+    } catch (err) {
+      console.error(ErrorMessage.BUILDING_CONFIG, err)
+    }
   }
 
   saveFile(data) {
@@ -107,10 +112,13 @@ class ConfigBuilder {
     return data;
   }
 
-  addStrategy(data, strategy) {
-    data.paperTrader.enabled = config.paperTrader;
-    data.trader.enabled = config.liveTrader;
+  setPaperAndLiveTraders(data, paper, live) {
+    data.paperTrader.enabled = paper;
+    data.trader.enabled = live;
+    return data;
+  }
 
+  addStrategy(data, strategy) {
     data.tradingAdvisor.enabled = true;
     data.tradingAdvisor.method = strategy.slug;
     data.tradingAdvisor.candleSize = strategy.input.candleSize;

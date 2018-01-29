@@ -45,6 +45,7 @@ class ConfigBuilder {
       data = this.setPaperAndLiveTraders(data, config.paperTrader, config.liveTrader);
       data = this.addStrategy(data, strategy);
       data = this.addCurrencyAsset(data);
+      data = this.setLogger(data);
       data = await this.saveFile(data);
 
     } catch (err) {
@@ -61,6 +62,7 @@ class ConfigBuilder {
       data = this.addStrategy(data, strategy);
       data = this.addBacktestDateRange(data, backtestRange);
       data = this.addCurrencyAsset(data);
+      data = this.setLogger(data);
       return data;
 
     } catch (err) {
@@ -81,6 +83,7 @@ class ConfigBuilder {
       data = this.setPaperAndLiveTraders(data, false, false);
       data = this.addImportDateRange(data, range);
       data = this.addCurrencyAsset(data);
+      data = this.setLogger(data);
 
       data.tradingAdvisor.enabled = false;
       data.performanceAnalyzer.enabled = false;
@@ -100,6 +103,19 @@ class ConfigBuilder {
         resolve(TEMP_CONFIG_LOCATION);
       });
     });
+  }
+
+  setLogger(data) {
+    data.silent = false;
+
+    if (config.logging == 'silent') {
+      data.debug = false;
+      data.silent = true;
+    } else if (config.logging == 'verbose' || config.logging == 'debug') {
+      data.debug = true;
+    }
+
+    return data;
   }
 
   removeOldConfig() {

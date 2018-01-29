@@ -20,8 +20,8 @@ module.exports = {
   // Port for the frontend to run on.
   port: 8080,
 
-  // verbose, debug, silent
-  logging: 'debug',
+  // verbose, debug, silent, default
+  logging: 'silent',
 
   watch: {
     exchange: 'poloniex',

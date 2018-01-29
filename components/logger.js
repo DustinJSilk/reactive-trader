@@ -1,13 +1,13 @@
 const config = require('../config/config.js');
 
 const logError = (text, obj = '') => {
-  if (config.logger != 'silent') {
+  if (config.logging != 'silent') {
     console.error(text, obj);
   }
 };
 
 const log = (text, obj = '') => {
-  if (config.logger == 'verbose') {
+  if (config.logging == 'verbose' || config.logging == 'default') {
     console.log(text, obj);
   }
 };

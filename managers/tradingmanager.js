@@ -39,12 +39,12 @@ class TradingManager {
   async start() {
     await this.gekkoManager.runServer();
 
-    // Make sure we have enough backtest data before starting
     try {
+      // Make sure we have enough backtest data before starting
       await this.configBuilder.buildImportConfig();
       await this.gekkoManager.importData();
     } catch (err) {
-      return console.log('Uh oh, importing failed!', err);
+      return console.error('Uh oh, importing failed!', err);
     }
 
     // Now start the strategy loop
@@ -54,13 +54,14 @@ class TradingManager {
   async updateStrategy() {
     try {
       // Set new strategy
-      const strategy = await this.strategyFinder.findNewStrategy();
+      var strategy = await this.strategyFinder.findNewStrategy();
       await this.runStrategy(strategy.entity);
 
-      this.scheduleUpdate(strategy);
     } catch (err) {
-      throw Error('Error finding new strategy: ', err);
+      return console.error('Error finding new strategy: ', err);
     }
+
+    this.scheduleUpdate(strategy);
   }
 
   scheduleUpdate(strategy) {
@@ -89,7 +90,7 @@ class TradingManager {
       await this.gekkoManager.runTrader();
 
     } catch (err) {
-      throw Error('Error starting to trade: ', err);
+      console.error('Error starting to trade: ', err);
     }
   }
 }

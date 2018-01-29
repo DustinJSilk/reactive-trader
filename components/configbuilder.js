@@ -107,13 +107,7 @@ class ConfigBuilder {
 
   setLogger(data) {
     data.silent = false;
-
-    if (config.logging == 'silent') {
-      data.debug = false;
-      data.silent = true;
-    } else if (config.logging == 'verbose' || config.logging == 'debug') {
-      data.debug = true;
-    }
+    data.debug = true;
 
     return data;
   }

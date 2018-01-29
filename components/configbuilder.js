@@ -78,9 +78,13 @@ class ConfigBuilder {
     try {
       await this.removeOldConfig();
       let data = this.duplicateGekkoConfigObject();
-      data = this.setPaperAndLiveTraders(data, true, false);
+      data = this.setPaperAndLiveTraders(data, false, false);
       data = this.addImportDateRange(data, range);
       data = this.addCurrencyAsset(data);
+
+      data.tradingAdvisor.enabled = false;
+      data.performanceAnalyzer.enabled = false;
+
       data = this.saveFile(data);
 
     } catch (err) {

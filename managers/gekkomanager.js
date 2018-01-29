@@ -3,6 +3,8 @@ const {exec} = require('child_process');
 const child = require('child');
 
 const config = require('../config/config.js');
+const {logError, log, logStatus} = require('../components/logger.js');
+
 
 const GEKKO = __dirname + '/../../gekko';
 const GEKKO_API = __dirname + '/../../web/server';
@@ -30,18 +32,21 @@ class GekkoManager {
   }
 
   async importData() {
-    console.log('Importing data');
+    logStatus('Importing data');
 
     return new Promise((resolve, reject) => {
       const importer = child({command: NODE, args: Options.IMPORT,
         cbStdout: data => {
-          console.log('' + data);
+          log(data.toString());
+
           if (data.indexOf('Done importing!') >= 0) {
             importer.stop();
             resolve();
           }
         },
-        cbStderr: data => console.log('' + data),
+        cbStderr: data => {
+          reject(data.toString());
+        },
         cbClose: exitCode => {
           resolve();
         },
@@ -56,14 +61,14 @@ class GekkoManager {
       await this.stopServer();
     }
 
-    console.log('Running server');
+    logStatus('Running server');
 
     return new Promise((resolve, reject) => {
       this.server = child({command: NODE, args: Options.SERVER,
         cbStdout: data => {},
-        cbStderr: data => console.log('' + data),
+        cbStderr: data => logError('Gekko server', data.toString()),
         cbClose: exitCode => {
-          console.log('Server quit unexpectedly', exitCode)
+          logError('Server quit unexpectedly', exitCode)
           this.stopServer().then(() => reject(exitCode));
         },
       });
@@ -76,14 +81,14 @@ class GekkoManager {
   }
 
   stopServer() {
-    console.log('Stopping server');
+    logStatus('Stopping server');
 
     return new Promise((resolve, reject) => {
       if (this.server != null) {
         this.server.stop(resolve);
         this.server = null;
       } else {
-        console.log('Stop failed: No server found');
+        logError('Stop failed: No server found');
         resolve();
       }
     });
@@ -95,8 +100,8 @@ class GekkoManager {
     }
     return new Promise((resolve, reject) => {
       this.trader = child({command: NODE, args: Options.TRADE,
-        cbStdout: data => console.log('out ' + data),
-        cbStderr: data => console.log('err ' + data)
+        cbStdout: data => log('out ' + data),
+        cbStderr: data => logError('err ' + data.toString())
       });
 
       this.trader.start();
@@ -107,14 +112,14 @@ class GekkoManager {
   }
 
   stopTrader() {
-    console.log('Stopping trader');
+    logStatus('Stopping trader');
 
     return new Promise((resolve, reject) => {
       if (this.trader != null) {
         this.trader.stop(resolve);
         this.trader = null;
       } else {
-        console.log('Stop failed: No trader found');
+        logError('Stop failed: No trader found');
         resolve();
       }
     });

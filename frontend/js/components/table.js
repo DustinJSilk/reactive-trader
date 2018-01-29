@@ -22,6 +22,7 @@ export default class Table {
           <td>${test.fitness.trades}</td>
           <td>${test.fitness.market}</td>
           <td>${test.fitness.profit}</td>
+          <td>${test.fitness.relativeProfit}</td>
           <td>${test.fitness.relativeYearlyProfit}</td>
         </tr>`;
 

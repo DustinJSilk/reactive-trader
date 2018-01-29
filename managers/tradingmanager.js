@@ -40,8 +40,12 @@ class TradingManager {
     await this.gekkoManager.runServer();
 
     // Make sure we have enough backtest data before starting
-    await this.configBuilder.buildImportConfig();
-    await this.gekkoManager.importData();
+    try {
+      await this.configBuilder.buildImportConfig();
+      await this.gekkoManager.importData();
+    } catch (err) {
+      return console.log('Uh oh, importing failed!', err);
+    }
 
     // Now start the strategy loop
     this.updateStrategy();

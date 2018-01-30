@@ -2,6 +2,7 @@ const moment = require('moment');
 const requestPromise = require('request-promise');
 
 const config = require('../config/config');
+const {logError, logInfo, logStatus} = require('../components/logger');
 
 const POST_OPTIONS = {
   method: 'POST',
@@ -34,7 +35,7 @@ class Backtester {
       const {report} = await requestPromise(options);
       return report;
     } catch (err) {
-      console.log('Backtest failed: ', err);
+      logError('Backtest failed');
     }
   }
 

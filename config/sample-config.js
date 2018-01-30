@@ -20,8 +20,10 @@ module.exports = {
   // Port for the frontend to run on.
   port: 8080,
 
-  // verbose, debug, silent, default
-  logging: 'silent',
+  // verbose, debug, silent, default.
+  // Logs will still always be written to the logs folder. This just just set
+  // what shows in the terminal.
+  logging: 'debug',
 
   watch: {
     exchange: 'poloniex',

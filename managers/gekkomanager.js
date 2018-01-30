@@ -2,8 +2,8 @@ const {exec} = require('child_process');
 
 const child = require('child');
 
-const config = require('../config/config.js');
-const {logError, log, logStatus} = require('../components/logger.js');
+const config = require('../config/config');
+const {logError, logInfo, logStatus} = require('../components/logger');
 
 
 const GEKKO = __dirname + '/../../gekko';
@@ -37,7 +37,7 @@ class GekkoManager {
     return new Promise((resolve, reject) => {
       const importer = child({command: NODE, args: Options.IMPORT,
         cbStdout: data => {
-          log(data.toString());
+          logInfo(data.toString());
 
           if (data.indexOf('Done importing!') >= 0) {
             importer.stop();
@@ -96,11 +96,13 @@ class GekkoManager {
 
   async runTrader() {
     if (this.trader) {
+      logStatus('Trader already running.');
       await this.stopTrader();
     }
     return new Promise((resolve, reject) => {
+      logStatus('Running trader.');
       this.trader = child({command: NODE, args: Options.TRADE,
-        cbStdout: data => log('out ' + data),
+        cbStdout: data => logInfo('out ' + data),
         cbStderr: data => logError('err ' + data.toString())
       });
 

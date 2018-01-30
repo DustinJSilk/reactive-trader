@@ -6,6 +6,7 @@ const ConfigBuilder = require('../components/configbuilder');
 const GekkoManager = require('./gekkomanager');
 const config = require('../config/config');
 const {StrategyFinder} = require('../components/strategyfinder');
+const {logError, logInfo, logStatus} = require('../components/logger');
 
 const InfoMessage = {
   START: 'Running Reactive Trader',
@@ -22,9 +23,10 @@ class TradingManager {
     this.strategyFinder = StrategyFinder.getInstance();
 
     if (this.configBuilder.isValid()) {
+      logStatus('Firing up');
       this.start();
     } else {
-      throw new Error(WARNING_CONFIG_ERROR);
+      logError(WARNING_CONFIG_ERROR);
     }
   }
 
@@ -44,7 +46,7 @@ class TradingManager {
       await this.configBuilder.buildImportConfig();
       await this.gekkoManager.importData();
     } catch (err) {
-      return console.error('Uh oh, importing failed!', err);
+      return logError('Uh oh, importing failed!', err);
     }
 
     // Now start the strategy loop
@@ -58,7 +60,7 @@ class TradingManager {
       await this.runStrategy(strategy.entity);
 
     } catch (err) {
-      return console.error('Error finding new strategy: ', err);
+      return logError('Error finding new strategy: ', err);
     }
 
     this.scheduleUpdate(strategy);
@@ -71,26 +73,21 @@ class TradingManager {
     const fireAt = new Date(Date.now() + interval);
 
     schedule.scheduleJob(fireAt, () => this.updateStrategy());
-    console.log('The next update will happen at ' + fireAt);
+    logStatus('The next update will happen at ' + fireAt);
   }
 
   async runStrategy(strategy) {
-    if (config.paperTrader || config.liveTrader) {
-      const tradeType = config.paperTrader ? 'paper' : 'live';
-      console.log(`About to start ${tradeType} trading.`);
-
-    } else {
-      console.log('You need to enable live or paper trading.');
-      return;
-    }
+    const tradeType = config.paperTrader ? 'paper' : 'live';
+    logStatus(`About to start ${tradeType} trading.`);
 
     try {
-      console.log('Running strategy: ', strategy);
       await this.configBuilder.buildStrategyConfig(strategy);
+
+      logStatus('Running strategy: ', strategy);
       await this.gekkoManager.runTrader();
 
     } catch (err) {
-      console.error('Error starting to trade: ', err);
+      logError('Error starting to trade: ', err);
     }
   }
 }

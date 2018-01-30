@@ -8,6 +8,7 @@ const ConfigBuilder = require('./configbuilder');
 const GekkoManager = require('../managers/gekkomanager');
 const config = require('../config/config');
 const strategies = require('../config/strategies');
+const {logError, logInfo, logStatus} = require('../components/logger');
 
 const EventType = {
   NEW_TEST_POPULATION: 'new-test-population'
@@ -59,7 +60,7 @@ class StrategyFinder extends EventEmitter {
   }
 
   async testStrategy(slug) {
-    console.log('Testing ' + slug);
+    logStatus('Testing ' + slug);
 
     const genetic = Genetic.create();
     genetic.optimize = this.optimize;
@@ -77,7 +78,7 @@ class StrategyFinder extends EventEmitter {
       genetic.notification = (pop, generation, stats, isFinished) => {
         results.push(...pop);
 
-        console.log(pop.map(p => p.fitness.relativeYearlyProfit).join('    '));
+        logInfo(pop.map(p => p.fitness.relativeYearlyProfit).join('    '));
 
         this.emit(EventType.NEW_TEST_POPULATION, pop[0].slug, pop);
 
@@ -118,10 +119,16 @@ class StrategyFinder extends EventEmitter {
   async fitness(entity) {
     const backtestConfig = await this.configBuilder.getBacktestConfig(entity,
         this.backtestRange);
+
     const result = await this.backtester.run(backtestConfig);
-    result.profit = parseFloat(result.profit);
-    result.relativeYearlyProfit = parseFloat(result.relativeYearlyProfit);
-    return result;
+
+    if (result) {
+      result.profit = parseFloat(result.profit);
+      result.relativeYearlyProfit = parseFloat(result.relativeYearlyProfit);
+      return result;
+    } else {
+      return logError('Backest returned null or undefined.');
+    }
   }
 
   crossover(mother, father) {

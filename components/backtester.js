@@ -31,6 +31,8 @@ class Backtester {
 
     const options = Object.assign(POST_OPTIONS, {body});
 
+    logInfo(JSON.stringify(options));
+
     try {
       const {report} = await requestPromise(options);
       return report;

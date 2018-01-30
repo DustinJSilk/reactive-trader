@@ -20,7 +20,7 @@ const HISTORY_SIZE = 20;
 const list = [
   {
     slug: 'MACD',
-    enabled: false,
+    enabled: true,
     input: () => ({
       candleSize: randomExt.integer(10, 1),
       historySize: HISTORY_SIZE,
@@ -39,7 +39,7 @@ const list = [
     slug: 'RSI',
     enabled: true,
     input: () => ({
-      candleSize: randomExt.integer(10, 1),
+      candleSize: randomExt.integer(2, 1),
       historySize: HISTORY_SIZE,
 
       interval: randomExt.integer(16, 4),
@@ -47,6 +47,21 @@ const list = [
         low: randomExt.integer(40, 20),
         high: randomExt.integer(80, 60),
         persistence: randomExt.integer(2, 0),
+      }
+    })
+  },
+  {
+    slug: 'DEMA',
+    enabled: true,
+    input: () => ({
+      candleSize: randomExt.integer(2, 1),
+      historySize: HISTORY_SIZE,
+
+      short: randomExt.integer(16, 4),
+      long: randomExt.integer(26, 16),
+      thresholds: {
+        down: randomExt.integer(40, 20),
+        up: randomExt.integer(80, 60)
       }
     })
   }

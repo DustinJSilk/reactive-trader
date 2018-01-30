@@ -9,6 +9,8 @@ const config = require('../config/config');
 const router = require('./router');
 const emitter = require('./emitter');
 
+const {logStatus} = require('../components/logger');
+
 
 module.exports = () => {
   const app = express();
@@ -25,6 +27,8 @@ module.exports = () => {
 
 
   server.listen(config.port, function() {
-    console.log('Listening on port ' + config.port);
+    logStatus('Frontend server is running:');
+    console.log('\x1b[1m\x1b[4m', 'http://localhost:' + config.port);
+    console.log('\x1b[0m');
   });
 };

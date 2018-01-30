@@ -1,5 +1,8 @@
 const fs = require('fs');
 
+const stringify = require('javascript-stringify');
+const stackTrace = require('stack-trace');
+
 const config = require('../config/config');
 
 /**
@@ -23,18 +26,32 @@ fs.writeFile(LogFile.ERROR, '', { flag: 'wx' }, err => {});
 fs.writeFile(LogFile.INFO, '', { flag: 'wx' }, err => {});
 fs.writeFile(LogFile.STATUS, '', { flag: 'wx' }, err => {});
 
-const logError = (text, obj = '') => {
+const logError = (text, obj = null) => {
+  obj = !obj ? '' : stringify(obj);
+
   if (config.logging != 'silent') {
     console.error(text, obj);
   }
 
-  const data = new Date() + ': ' + text + ' ' + obj;
-  fs.appendFile(LogFile.ERROR, '\n ' + data, err => {
+  const trace = stackTrace.get();
+
+  const stack = trace.map(t => t.getFileName() + ' ' + t.getLineNumber()).join(', ');
+
+  const message = `
+    ${new Date()}: ${text}
+    ${stack}
+    ${obj}
+    \n\n
+  `;
+
+  fs.appendFile(LogFile.ERROR, message, err => {
     if (err) console.error('Error appending to error file. Oh the irony!', err);
   });
 };
 
-const logInfo = (text, obj = '') => {
+const logInfo = (text, obj = null) => {
+  obj = !obj ? '' : stringify(obj);
+
   if (config.logging == 'verbose' || config.logging == 'default') {
     console.log(text, obj);
   }
@@ -45,10 +62,12 @@ const logInfo = (text, obj = '') => {
   });
 };
 
-const logStatus = (text) => {
-  console.log(text);
+const logStatus = (text, obj = null) => {
+  obj = !obj ? '' : stringify(obj, null, ' ');
 
-  const data = new Date() + ': ' + text;
+  console.log(text, obj);
+
+  const data = new Date() + ': ' + text + ' ' + obj;
   fs.appendFile(LogFile.STATUS, '\n ' + data, err => {
     if (err) console.error('Error appending to status file.', err);
   });

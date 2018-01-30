@@ -21,9 +21,9 @@ module.exports = {
   port: 8080,
 
   // verbose, debug, silent, default.
-  // Logs will still always be written to the logs folder. This just just set
+  // Logs will still always be written to the logs folder. This just decides
   // what shows in the terminal.
-  logging: 'debug',
+  logging: 'default',
 
   watch: {
     exchange: 'poloniex',

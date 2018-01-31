@@ -15,10 +15,14 @@ export default class Table {
     });
   }
 
-  populate(slug, data) {
-    data.forEach(test => {
+  populate(data) {
+    const searchId = data.searchId;
+    const strategy = data.strategy;
+
+    data.population.forEach(test => {
       const fitnessTemplate = `
         <tr>
+          <td>${strategy}</td>
           <td>${test.fitness.trades}</td>
           <td>${test.fitness.market}</td>
           <td>${test.fitness.profit}</td>

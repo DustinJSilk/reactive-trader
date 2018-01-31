@@ -43,7 +43,7 @@
     "socket.io": "2.0.4",
     "stack-trace": "0.0.10",
     "tablesort": "^5.0.2",
-    "toml": "^2.3.3"
+    "uuid": "3.2.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

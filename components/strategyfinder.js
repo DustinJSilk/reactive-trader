@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 
+const uuidv1 = require('uuid/v1');
 const Genetic = require('genetic-js');
 const randomExt = require('random-ext');
 
@@ -22,6 +23,11 @@ class StrategyFinder extends EventEmitter {
     this.backtester = new Backtester();
     this.configBuilder = new ConfigBuilder();
 
+    this.searchData = {
+      id: null,
+      result: null
+    };
+
     this.backtestRange = null;
   }
 
@@ -34,8 +40,16 @@ class StrategyFinder extends EventEmitter {
   }
 
   async findNewStrategy() {
-    this.backtestRange = null
-    return await this.testAllStrategies();
+    this.backtestRange = null;
+    this.searchData = {
+      id: uuidv1(),
+      result: null
+    };
+
+    const result = await this.testAllStrategies();
+
+    this.searchData.result = result;
+    return result;
   }
 
   async findStrategyBetween(start, end) {
@@ -80,7 +94,11 @@ class StrategyFinder extends EventEmitter {
 
         logInfo(pop.map(p => p.fitness.relativeYearlyProfit).join('    '));
 
-        this.emit(EventType.NEW_TEST_POPULATION, pop[0].slug, pop);
+        this.emit(EventType.NEW_TEST_POPULATION, {
+          searchId: this.searchData.id,
+          strategy: pop[0].entity.slug,
+          population: pop
+        });
 
         if (isFinished && generation == config.genetic.iterations) {
           results.sort((a, b) => this.optimize(a.fitness, b.fitness));

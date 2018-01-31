@@ -1,7 +1,10 @@
 import 'babel-polyfill';
 
-import {EventType} from '../../components/strategyfinder';
 import Table from './components/table';
+
+const EventType = {
+  NEW_TEST_POPULATION: 'new-test-population'
+};
 
 class App {
   constructor() {
@@ -12,10 +15,8 @@ class App {
   }
 
   addEventListeners() {
-    this.socket.on('ui-update', () => window.location.reload());
-
-    this.socket.on(EventType.NEW_TEST_POPULATION, (slug, data) =>
-      this.table.populate(slug, data));
+    this.socket.on(EventType.NEW_TEST_POPULATION, (data) =>
+        this.table.populate(data));
   }
 
   async wait(time) {

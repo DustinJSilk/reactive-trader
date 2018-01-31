@@ -7,8 +7,7 @@ class Emitter {
     this.strategyFinder = StrategyFinder.getInstance();
 
     this.strategyFinder.addListener(EventType.NEW_TEST_POPULATION,
-        (strategy, data) => io.emit(EventType.NEW_TEST_POPULATION,
-            strategy, data))
+        data => io.emit(EventType.NEW_TEST_POPULATION, data))
   }
 }
 
